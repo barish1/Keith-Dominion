@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no">
 <title>Keith Dominion</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0d1117">
@@ -289,6 +289,203 @@ body{font-family:'Courier New',monospace;background:var(--bg);color:var(--text);
 
 #early-game{display:flex;flex-direction:column;height:100vh}
 #world-game{display:none}
+
+/* ═══════════════════════════════════════════════
+   MOBILE LAYOUT  (portrait phones ≤ 767px)
+═══════════════════════════════════════════════ */
+@media (max-width: 767px) {
+
+  /* ── EARLY GAME ────────────────────────────── */
+  #gd {
+    height: 100svh;
+    height: -webkit-fill-available;
+  }
+  #gd-hdr {
+    padding: 6px 10px;
+    gap: 6px;
+    min-height: 48px;
+  }
+  .hd-t  { font-size: 11px; letter-spacing: 1px; }
+  .hd-stage { font-size: 8px; }
+  .hd-stats { gap: 8px; }
+  .hd-s  { font-size: 10px; }
+  .hd-s strong { font-size: 11px; }
+  .nb    { padding: 8px 12px; font-size: 12px; min-height: 36px; }
+
+  /* Map on top, panel below */
+  #gd-body { flex-direction: column; }
+  #gd-map  { height: 42vh; flex: none; }
+  #gd-right {
+    width: 100%;
+    flex: 1;
+    border-left: none;
+    border-top: 1px solid var(--brd);
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Overview stats: 2x2 grid */
+  .sg { gap: 6px; padding: 8px; }
+  .sc { padding: 8px; }
+  .sv { font-size: 16px; }
+  .sk { font-size: 10px; }
+
+  /* Shop tabs — 4 per row, 2 rows */
+  .st-grid { grid-template-columns: repeat(4,1fr); }
+  .stb { padding: 9px 2px; font-size: 10px; }
+
+  /* Shop items */
+  .si { padding: 10px; }
+  .si-nm { font-size: 12px; }
+  .si-ds { font-size: 10px; }
+  .si-by { padding: 10px; font-size: 11px; min-height: 40px; }
+
+  /* Log */
+  .le { font-size: 11px; padding: 5px 8px; }
+
+  /* Election button */
+  #elect-btn { padding: 12px; font-size: 13px; }
+
+  /* City cards */
+  .cc { padding: 10px; }
+  .cc-nm { font-size: 12px; }
+  .cc-info { font-size: 10px; }
+  .cbt { padding: 8px; font-size: 10px; min-height: 36px; }
+
+  /* Footer */
+  #gd-foot { padding: 6px 10px; }
+  .fp-l { font-size: 9px; }
+  #vote-pct { font-size: 11px; }
+
+  /* Modals — full-screen on mobile */
+  #qm { padding: 12px; }
+  .qh  { margin-bottom: 10px; }
+  .qt  { font-size: 14px; }
+  .qqt { font-size: 14px; }
+  .qo  { padding: 12px 14px; font-size: 13px; min-height: 48px; }
+  .qrb { padding: 13px 20px; font-size: 13px; }
+
+  #lm  { padding: 12px; }
+  .lm-t { font-size: 14px; }
+  .lb2  { padding: 12px; font-size: 12px; min-height: 48px; }
+
+  #pm { padding: 12px; }
+  #pm-title { font-size: 15px; }
+
+  /* ── WORLD GAME ────────────────────────────── */
+  #app { height: 100svh; height: -webkit-fill-available; }
+  #hdr { padding: 6px 10px; gap: 6px; min-height: 48px; }
+  .ht  { font-size: 11px; letter-spacing: 1px; }
+  .stat { font-size: 10px; }
+  .stat strong { font-size: 11px; }
+
+  /* Map on top, panel below */
+  #body { flex-direction: column; }
+  #map-wrap { height: 42vh; flex: none; }
+  #right {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid var(--brd);
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* World panels */
+  .pnl { min-height: 0; }
+  .sg  { gap: 5px; padding: 8px; }
+  .sv  { font-size: 14px; }
+  .le  { font-size: 11px; }
+  .escroll { padding: 6px; }
+  .ec  { padding: 8px; margin-bottom: 6px; }
+  .ec-n { font-size: 11px; }
+  .ec-d { font-size: 10px; }
+  .ebtn { padding: 9px; font-size: 11px; min-height: 40px; }
+
+  /* Country panel */
+  #cp-name { font-size: 14px; }
+  .cc-nm { font-size: 12px; }
+  .cbt { padding: 8px; min-height: 36px; font-size: 10px; }
+  #cp-full { padding: 11px; font-size: 12px; }
+  #cp-back { padding: 10px; font-size: 11px; min-height: 40px; }
+
+  /* Zoom controls — bigger touch targets */
+  #zoom-ctrl { bottom: 10px; right: 10px; gap: 6px; }
+  .zb { padding: 12px 18px; font-size: 18px; min-width: 48px; }
+
+  /* Invasion modal — full screen */
+  #inv  { padding: 0; justify-content: flex-end; }
+  .ibox { max-width: 100%; border-radius: 16px 16px 0 0; max-height: 90vh; }
+  .it   { font-size: 14px; }
+  .isv  { font-size: 14px; }
+  .isk  { font-size: 9px; }
+  .ia   { padding: 12px; font-size: 12px; min-height: 48px; }
+  .iclose { padding: 13px; font-size: 12px; min-height: 48px; }
+
+  /* City shop tabs — emoji only, 4+4 */
+  .cstabs { grid-template-columns: repeat(4,1fr); }
+  .cstab  { padding: 9px 2px; font-size: 16px; }
+  .cs-item { padding: 10px; }
+  .cs-nm  { font-size: 11px; }
+  .cs-ds  { font-size: 10px; }
+  .cs-btn { padding: 10px; font-size: 10px; min-height: 40px; }
+  #city-shop-list { padding: 6px; }
+
+  /* Quiz overlay — bottom sheet */
+  #qov { padding: 0; justify-content: flex-end; }
+  .qbox {
+    max-width: 100%;
+    background: var(--b2);
+    border-radius: 16px 16px 0 0;
+    padding: 20px 16px 32px;
+    gap: 12px;
+  }
+  .qt  { font-size: 14px; }
+  .qtxt { font-size: 14px; }
+  .qo  { padding: 13px 14px; font-size: 13px; min-height: 48px; }
+  .qskip { padding: 12px; min-height: 44px; font-size: 12px; }
+  #qnxt-earn { padding: 12px; font-size: 13px; min-height: 48px; }
+
+  /* Defense modal */
+  #def-modal { padding: 0; justify-content: flex-end; }
+  .dbox {
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 16px 32px;
+  }
+  .dt { font-size: 14px; }
+  .isv { font-size: 15px; }
+
+  /* Tooltip — smaller on mobile */
+  #tip { font-size: 11px; padding: 5px 8px; }
+
+  /* Footer */
+  #foot { padding: 6px 10px; }
+  .fl   { font-size: 9px; }
+  #fv   { font-size: 11px; }
+
+  /* Production buildings — narrower */
+  .army-s { padding: 8px; }
+
+  /* Approval bar */
+  #appr-section { padding: 7px 10px; }
+}
+
+/* ── Touch-action for all buttons ───────────────── */
+button, .nb, .stb, .cstab, .zb, .nb, .cbt, .qo, .ia, .ebtn, .si-by {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Safe area for phones with notch/home indicator ── */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  #gd-foot, #foot {
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+  }
+  #gd-hdr, #hdr {
+    padding-top: max(6px, env(safe-area-inset-top));
+  }
+}
+
 </style>
 </head>
 <body>
