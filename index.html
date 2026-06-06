@@ -290,31 +290,86 @@ body{font-family:'Courier New',monospace;background:var(--bg);color:var(--text);
 #early-game{display:flex;flex-direction:column;height:100vh}
 #world-game{display:none}
 
+
+  #gd-hdr, #hdr {
+    padding-top: max(6px, env(safe-area-inset-top));
+  }
+}
+
+
+/* ═══════════════════════════════════════════════
+   MOBILE BOTTOM NAV (always defined, shown only on mobile)
+═══════════════════════════════════════════════ */
+#kd-mobile-nav, #wg-mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(8,14,22,0.97);
+  border-top: 1px solid var(--brd);
+  z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.mbn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--dim);
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 10px 4px 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.mbn.on { color: var(--bluel); }
+.mbn:active { background: rgba(255,255,255,0.04); }
+
+/* ── Touch action on all interactive elements ── */
+button, a, .nb, .stb, .cstab, .zb, .cbt, .qo, .ia, .ebtn, .si-by, .cc, .itab {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* ═══════════════════════════════════════════════
    MOBILE LAYOUT  (portrait phones ≤ 767px)
 ═══════════════════════════════════════════════ */
 @media (max-width: 767px) {
 
+  /* Show mobile nav bars */
+  #kd-mobile-nav { display: flex; }
+  #wg-mobile-nav { display: flex; }
+
   /* ── EARLY GAME ────────────────────────────── */
   #gd {
     height: 100svh;
     height: -webkit-fill-available;
+    padding-bottom: calc(56px + env(safe-area-inset-bottom));
   }
+  /* Hide desktop nav buttons — replaced by bottom bar */
+  #gd-hdr .nb { display: none; }
+
   #gd-hdr {
     padding: 6px 10px;
-    gap: 6px;
+    gap: 4px;
     min-height: 48px;
+    flex-wrap: nowrap;
   }
-  .hd-t  { font-size: 11px; letter-spacing: 1px; }
+  .hd-t     { font-size: 10px; letter-spacing: 0.5px; }
   .hd-stage { font-size: 8px; }
-  .hd-stats { gap: 8px; }
-  .hd-s  { font-size: 10px; }
+  .hd-stats { gap: 6px; flex-wrap: wrap; }
+  .hd-s     { font-size: 9px; }
   .hd-s strong { font-size: 11px; }
-  .nb    { padding: 8px 12px; font-size: 12px; min-height: 36px; }
 
-  /* Map on top, panel below */
+  /* Stack map above panel */
   #gd-body { flex-direction: column; }
-  #gd-map  { height: 42vh; flex: none; }
+  #gd-map  { height: 40vh; flex: none; transition: height 0.25s; }
   #gd-right {
     width: 100%;
     flex: 1;
@@ -324,64 +379,80 @@ body{font-family:'Courier New',monospace;background:var(--bg);color:var(--text);
     overflow: hidden;
   }
 
-  /* Overview stats: 2x2 grid */
-  .sg { gap: 6px; padding: 8px; }
+  /* Panels fill height */
+  .pnl-kd { height: 100%; overflow-y: auto; }
+
+  /* Stats 2x2 grid */
+  .sg { gap: 5px; padding: 8px; }
   .sc { padding: 8px; }
   .sv { font-size: 16px; }
-  .sk { font-size: 10px; }
+  .sk { font-size: 9px; }
 
-  /* Shop tabs — 4 per row, 2 rows */
-  .st-grid { grid-template-columns: repeat(4,1fr); }
-  .stb { padding: 9px 2px; font-size: 10px; }
+  /* Shop tabs — 4 per row */
+  .st-grid { grid-template-columns: repeat(4,1fr) !important; }
+  .stb { padding: 8px 2px; font-size: 10px; min-height: 40px; }
 
   /* Shop items */
-  .si { padding: 10px; }
-  .si-nm { font-size: 12px; }
-  .si-ds { font-size: 10px; }
-  .si-by { padding: 10px; font-size: 11px; min-height: 40px; }
+  .si { padding: 9px 10px; }
+  .si-nm { font-size: 11px; }
+  .si-ds { font-size: 9px; }
+  .si-by { padding: 10px; font-size: 11px; min-height: 44px; width: 100%; margin-top: 4px; }
 
-  /* Log */
+  /* Election */
+  #elect-btn { padding: 12px; font-size: 13px; min-height: 48px; }
+
+  /* Event log */
   .le { font-size: 11px; padding: 5px 8px; }
 
-  /* Election button */
-  #elect-btn { padding: 12px; font-size: 13px; }
-
   /* City cards */
-  .cc { padding: 10px; }
-  .cc-nm { font-size: 12px; }
+  .cc { padding: 9px 10px; }
+  .cc-nm { font-size: 11px; }
   .cc-info { font-size: 10px; }
-  .cbt { padding: 8px; font-size: 10px; min-height: 36px; }
+  .cbt { padding: 9px; font-size: 10px; min-height: 40px; }
 
   /* Footer */
-  #gd-foot { padding: 6px 10px; }
-  .fp-l { font-size: 9px; }
+  #gd-foot { padding: 5px 10px; }
+  .fp-l { font-size: 8px; }
   #vote-pct { font-size: 11px; }
 
-  /* Modals — full-screen on mobile */
-  #qm { padding: 12px; }
-  .qh  { margin-bottom: 10px; }
-  .qt  { font-size: 14px; }
-  .qqt { font-size: 14px; }
-  .qo  { padding: 12px 14px; font-size: 13px; min-height: 48px; }
-  .qrb { padding: 13px 20px; font-size: 13px; }
-
-  #lm  { padding: 12px; }
-  .lm-t { font-size: 14px; }
-  .lb2  { padding: 12px; font-size: 12px; min-height: 48px; }
-
-  #pm { padding: 12px; }
+  /* Modals — full screen bottom sheet */
+  #qm, #lm, #pm { padding: 0; align-items: flex-end; }
+  #qm > div, #lm > div, #pm > div {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    padding: 20px 16px 32px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .qt, .qqt { font-size: 14px; }
+  .qo { padding: 13px 14px; font-size: 13px; min-height: 48px; }
+  .qrb, .lb2 { padding: 13px 20px; font-size: 13px; min-height: 48px; }
+  .lm-t { font-size: 15px; }
   #pm-title { font-size: 15px; }
 
   /* ── WORLD GAME ────────────────────────────── */
-  #app { height: 100svh; height: -webkit-fill-available; }
-  #hdr { padding: 6px 10px; gap: 6px; min-height: 48px; }
-  .ht  { font-size: 11px; letter-spacing: 1px; }
-  .stat { font-size: 10px; }
+  #app {
+    height: 100svh;
+    height: -webkit-fill-available;
+    padding-bottom: calc(56px + env(safe-area-inset-bottom));
+  }
+  /* Hide desktop nav — replaced by bottom bar */
+  #hdr .nb { display: none; }
+
+  #hdr {
+    padding: 6px 10px;
+    gap: 4px;
+    min-height: 48px;
+    flex-wrap: nowrap;
+  }
+  .ht     { font-size: 10px; letter-spacing: 0.5px; }
+  .stat   { font-size: 9px; }
   .stat strong { font-size: 11px; }
 
-  /* Map on top, panel below */
+  /* Stack: map top, panel bottom */
   #body { flex-direction: column; }
-  #map-wrap { height: 42vh; flex: none; }
+  #map-wrap { height: 42vh; flex: none; position: relative; }
   #right {
     width: 100%;
     border-left: none;
@@ -390,99 +461,110 @@ body{font-family:'Courier New',monospace;background:var(--bg);color:var(--text);
     min-height: 0;
   }
 
-  /* World panels */
-  .pnl { min-height: 0; }
+  /* World panels scroll */
+  .pnl { overflow-y: auto; }
   .sg  { gap: 5px; padding: 8px; }
   .sv  { font-size: 14px; }
   .le  { font-size: 11px; }
+
+  /* Earn / Army */
   .escroll { padding: 6px; }
-  .ec  { padding: 8px; margin-bottom: 6px; }
+  .ec  { padding: 9px 10px; }
   .ec-n { font-size: 11px; }
   .ec-d { font-size: 10px; }
-  .ebtn { padding: 9px; font-size: 11px; min-height: 40px; }
+  .ebtn { padding: 10px; font-size: 11px; min-height: 44px; }
+  .army-s { padding: 8px; }
 
   /* Country panel */
-  #cp-name { font-size: 14px; }
-  .cc-nm { font-size: 12px; }
-  .cbt { padding: 8px; min-height: 36px; font-size: 10px; }
-  #cp-full { padding: 11px; font-size: 12px; }
-  #cp-back { padding: 10px; font-size: 11px; min-height: 40px; }
+  #cp-hdr { padding: 10px; }
+  #cp-flag { font-size: 28px; }
+  #cp-name { font-size: 15px; }
+  .cc { padding: 9px; }
+  .cc-nm { font-size: 11px; }
+  .cc-info { font-size: 10px; }
+  .cbt { padding: 9px; font-size: 10px; min-height: 40px; }
+  #cp-full { padding: 12px; font-size: 12px; min-height: 48px; }
+  #cp-back { padding: 11px; font-size: 12px; min-height: 44px; }
 
-  /* Zoom controls — bigger touch targets */
+  /* Zoom — bigger touch targets */
   #zoom-ctrl { bottom: 10px; right: 10px; gap: 6px; }
-  .zb { padding: 12px 18px; font-size: 18px; min-width: 48px; }
+  .zb { padding: 12px 18px; font-size: 18px; min-width: 50px; min-height: 48px; }
+  #zoom-level { font-size: 9px; }
 
-  /* Invasion modal — full screen */
-  #inv  { padding: 0; justify-content: flex-end; }
-  .ibox { max-width: 100%; border-radius: 16px 16px 0 0; max-height: 90vh; }
-  .it   { font-size: 14px; }
-  .isv  { font-size: 14px; }
-  .isk  { font-size: 9px; }
-  .ia   { padding: 12px; font-size: 12px; min-height: 48px; }
+  /* Invasion alert */
+  #inv-alert { max-width: calc(100% - 24px); font-size: 11px; }
+  .ia-flag { font-size: 20px; }
+
+  /* Invasion modal — bottom sheet */
+  #inv { padding: 0; justify-content: flex-end; }
+  .ibox {
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .it  { font-size: 13px; }
+  .isv { font-size: 14px; }
+  .isk { font-size: 9px; }
+  .ia  { padding: 12px; font-size: 12px; min-height: 48px; }
   .iclose { padding: 13px; font-size: 12px; min-height: 48px; }
 
-  /* City shop tabs — emoji only, 4+4 */
+  /* City shop tabs */
   .cstabs { grid-template-columns: repeat(4,1fr); }
-  .cstab  { padding: 9px 2px; font-size: 16px; }
-  .cs-item { padding: 10px; }
+  .cstab  { padding: 9px 2px; font-size: 15px; }
+  .cs-item { padding: 9px 10px; }
   .cs-nm  { font-size: 11px; }
   .cs-ds  { font-size: 10px; }
-  .cs-btn { padding: 10px; font-size: 10px; min-height: 40px; }
-  #city-shop-list { padding: 6px; }
+  .cs-btn { padding: 10px; font-size: 10px; min-height: 44px; }
 
-  /* Quiz overlay — bottom sheet */
+  /* Quiz — bottom sheet */
   #qov { padding: 0; justify-content: flex-end; }
   .qbox {
     max-width: 100%;
-    background: var(--b2);
     border-radius: 16px 16px 0 0;
     padding: 20px 16px 32px;
-    gap: 12px;
+    gap: 10px;
+    max-height: 92vh;
+    overflow-y: auto;
   }
-  .qt  { font-size: 14px; }
   .qtxt { font-size: 14px; }
-  .qo  { padding: 13px 14px; font-size: 13px; min-height: 48px; }
-  .qskip { padding: 12px; min-height: 44px; font-size: 12px; }
-  #qnxt-earn { padding: 12px; font-size: 13px; min-height: 48px; }
+  .qopts { gap: 8px; }
+  .qo   { padding: 13px; font-size: 13px; min-height: 48px; }
+  .qskip  { padding: 12px; min-height: 44px; font-size: 12px; }
+  #qnxt-earn { padding: 13px; font-size: 13px; min-height: 48px; }
+  #q-mode-label { font-size: 13px; }
 
-  /* Defense modal */
+  /* Defense modal — bottom sheet */
   #def-modal { padding: 0; justify-content: flex-end; }
   .dbox {
     max-width: 100%;
     border-radius: 16px 16px 0 0;
     padding: 20px 16px 32px;
   }
-  .dt { font-size: 14px; }
-  .isv { font-size: 15px; }
-
-  /* Tooltip — smaller on mobile */
-  #tip { font-size: 11px; padding: 5px 8px; }
+  .dt  { font-size: 14px; }
+  .dstats { gap: 6px; }
 
   /* Footer */
-  #foot { padding: 6px 10px; }
+  #foot { padding: 5px 10px; }
   .fl   { font-size: 9px; }
   #fv   { font-size: 11px; }
 
-  /* Production buildings — narrower */
-  .army-s { padding: 8px; }
-
-  /* Approval bar */
+  /* Approval bar compact */
   #appr-section { padding: 7px 10px; }
+  #appr-bonuses { gap: 3px; }
+
+  /* Tooltip hidden on mobile (use panel info instead) */
+  #tip { display: none !important; }
+
+  /* Victory screen */
+  #vic { padding: 24px 16px; }
+  #vic > div:first-child { font-size: 56px; }
 }
 
-/* ── Touch-action for all buttons ───────────────── */
-button, .nb, .stb, .cstab, .zb, .nb, .cbt, .qo, .ia, .ebtn, .si-by {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ── Safe area for phones with notch/home indicator ── */
-@supports (padding-bottom: env(safe-area-inset-bottom)) {
-  #gd-foot, #foot {
-    padding-bottom: max(6px, env(safe-area-inset-bottom));
-  }
-  #gd-hdr, #hdr {
-    padding-top: max(6px, env(safe-area-inset-top));
+/* Safe area for notched phones */
+@supports (padding: env(safe-area-inset-bottom)) {
+  #kd-mobile-nav, #wg-mobile-nav {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
@@ -2662,6 +2744,36 @@ setInterval(()=>{
 
 </script>
 <script>
+
+
+// Mobile bottom nav helpers
+function mbnActive(id) {
+  document.querySelectorAll('#kd-mobile-nav .mbn').forEach(b => b.classList.remove('on'));
+  var el = document.getElementById(id); if(el) el.classList.add('on');
+  // On mobile: show map SVG area when MAP pressed, hide it when other tab
+  var gmap = document.getElementById('gd-map');
+  if(!gmap) return;
+  if(id === 'mbn-map') {
+    gmap.style.display = '';
+    document.getElementById('gd-right').style.flex = '1';
+  } else {
+    // Show full panel, shrink map
+    gmap.style.height = '0';
+    gmap.style.overflow = 'hidden';
+    document.getElementById('gd-right').style.flex = '1';
+  }
+}
+function wmbnActive(id) {
+  document.querySelectorAll('#wg-mobile-nav .mbn').forEach(b => b.classList.remove('on'));
+  var el = document.getElementById(id); if(el) el.classList.add('on');
+}
+// Patch setPanel to sync mobile nav
+var _origSetPanel = window.setPanel;
+window.setPanel = function(p) {
+  _origSetPanel(p);
+  var map = {'ov':'mbn-map','sh':'mbn-shop','lb':'mbn-lab'};
+  if(map[p]) mbnActive(map[p]);
+};
 
 // Stage bridge: early game → world conquest
 function goWorld() {
