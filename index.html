@@ -297,98 +297,92 @@ body{font-family:'Courier New',monospace;background:var(--bg);color:var(--text);
 }
 
 
-/* ═══════════════════════════════════════════════
-   MOBILE BOTTOM NAV (always defined, shown only on mobile)
-═══════════════════════════════════════════════ */
+
+
+
+/* ── Touch: remove tap delay on all clickables ── */
+button, a, [onclick] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── MOBILE BOTTOM NAV ── */
 #kd-mobile-nav, #wg-mobile-nav {
-  display: none;
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  background: rgba(8,14,22,0.97);
-  border-top: 1px solid var(--brd);
-  z-index: 50;
-  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 9999;
+  background: #080e16;
+  border-top: 1px solid #1e2d3d;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  /* display controlled by JS */
 }
 .mbn {
   flex: 1;
-  background: transparent;
+  background: none;
   border: none;
-  color: var(--dim);
+  color: #4a6a8a;
   font-family: 'Courier New', monospace;
   font-size: 10px;
   font-weight: 700;
   padding: 10px 4px 8px;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  text-align: center;
+  line-height: 1.4;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-}
-.mbn.on { color: var(--bluel); }
-.mbn:active { background: rgba(255,255,255,0.04); }
-
-/* ── Touch action on all interactive elements ── */
-button, a, .nb, .stb, .cstab, .zb, .cbt, .qo, .ia, .ebtn, .si-by, .cc, .itab {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  min-height: 52px;
 }
+.mbn.on  { color: #60a5fa; }
+.mbn:active { background: rgba(255,255,255,0.06); }
 
 /* ═══════════════════════════════════════════════
-   MOBILE LAYOUT  (portrait phones ≤ 767px)
+   MOBILE LAYOUT  (≤ 767px)
 ═══════════════════════════════════════════════ */
 @media (max-width: 767px) {
 
-  /* Show mobile nav bars */
-  #kd-mobile-nav { display: flex; }
-  #wg-mobile-nav { display: flex; }
+  /* Prevent horizontal scroll */
+  html, body { overflow-x: hidden; }
 
-  /* ── EARLY GAME ────────────────────────────── */
+  /* ── EARLY GAME ── */
   #gd {
     height: 100svh;
     height: -webkit-fill-available;
-    padding-bottom: calc(56px + env(safe-area-inset-bottom));
+    padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
   }
-  /* Hide desktop nav buttons — replaced by bottom bar */
-  #gd-hdr .nb { display: none; }
-
+  /* Hide desktop nav — replaced by bottom bar */
+  #gd-hdr .nb { display: none !important; }
   #gd-hdr {
     padding: 6px 10px;
-    gap: 4px;
-    min-height: 48px;
+    min-height: 46px;
     flex-wrap: nowrap;
   }
-  .hd-t     { font-size: 10px; letter-spacing: 0.5px; }
+  .hd-t { font-size: 10px; letter-spacing: 0.5px; }
   .hd-stage { font-size: 8px; }
-  .hd-stats { gap: 6px; flex-wrap: wrap; }
-  .hd-s     { font-size: 9px; }
+  .hd-s { font-size: 9px; }
   .hd-s strong { font-size: 11px; }
+  .hd-stats { gap: 6px; }
 
-  /* Stack map above panel */
+  /* Stack vertically */
   #gd-body { flex-direction: column; }
-  #gd-map  { height: 40vh; flex: none; transition: height 0.25s; }
+  #gd-map  { height: 38vh; flex: none; }
   #gd-right {
     width: 100%;
     flex: 1;
     border-left: none;
-    border-top: 1px solid var(--brd);
-    min-height: 0;
+    border-top: 1px solid #1e2d3d;
     overflow: hidden;
+    min-height: 0;
   }
 
-  /* Panels fill height */
-  .pnl-kd { height: 100%; overflow-y: auto; }
-
-  /* Stats 2x2 grid */
-  .sg { gap: 5px; padding: 8px; }
+  /* Stats grid */
+  .sg { gap: 5px; padding: 7px; }
   .sc { padding: 8px; }
-  .sv { font-size: 16px; }
+  .sv { font-size: 15px; }
   .sk { font-size: 9px; }
 
-  /* Shop tabs — 4 per row */
+  /* Shop tabs — 4 across */
   .st-grid { grid-template-columns: repeat(4,1fr) !important; }
   .stb { padding: 8px 2px; font-size: 10px; min-height: 40px; }
 
@@ -396,176 +390,130 @@ button, a, .nb, .stb, .cstab, .zb, .cbt, .qo, .ia, .ebtn, .si-by, .cc, .itab {
   .si { padding: 9px 10px; }
   .si-nm { font-size: 11px; }
   .si-ds { font-size: 9px; }
-  .si-by { padding: 10px; font-size: 11px; min-height: 44px; width: 100%; margin-top: 4px; }
-
-  /* Election */
-  #elect-btn { padding: 12px; font-size: 13px; min-height: 48px; }
+  .si-by { padding: 11px; font-size: 12px; min-height: 44px; width: 100%; margin-top: 5px; }
 
   /* Event log */
   .le { font-size: 11px; padding: 5px 8px; }
 
-  /* City cards */
-  .cc { padding: 9px 10px; }
-  .cc-nm { font-size: 11px; }
-  .cc-info { font-size: 10px; }
+  /* Election button */
+  #elect-btn { padding: 13px; font-size: 13px; min-height: 48px; }
+
+  /* City + lab */
   .cbt { padding: 9px; font-size: 10px; min-height: 40px; }
+  .lb2 { padding: 12px; font-size: 13px; min-height: 48px; }
 
   /* Footer */
   #gd-foot { padding: 5px 10px; }
   .fp-l { font-size: 8px; }
   #vote-pct { font-size: 11px; }
 
-  /* Modals — full screen bottom sheet */
-  #qm, #lm, #pm { padding: 0; align-items: flex-end; }
-  #qm > div, #lm > div, #pm > div {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-    padding: 20px 16px 32px;
-    max-height: 90vh;
-    overflow-y: auto;
+  /* Modals: bottom sheets */
+  #qm, #lm, #pm { padding: 0 !important; align-items: flex-end !important; }
+  #qm > *, #lm > *, #pm > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 16px 16px 0 0 !important;
+    padding: 20px 16px 32px !important;
+    max-height: 88vh !important;
+    overflow-y: auto !important;
   }
-  .qt, .qqt { font-size: 14px; }
+  .qqt { font-size: 14px; }
   .qo { padding: 13px 14px; font-size: 13px; min-height: 48px; }
-  .qrb, .lb2 { padding: 13px 20px; font-size: 13px; min-height: 48px; }
-  .lm-t { font-size: 15px; }
-  #pm-title { font-size: 15px; }
+  .qrb { padding: 13px; font-size: 13px; min-height: 48px; }
+  .lm-t { font-size: 14px; }
 
-  /* ── WORLD GAME ────────────────────────────── */
+  /* ── WORLD GAME ── */
   #app {
     height: 100svh;
     height: -webkit-fill-available;
-    padding-bottom: calc(56px + env(safe-area-inset-bottom));
+    padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
   }
-  /* Hide desktop nav — replaced by bottom bar */
-  #hdr .nb { display: none; }
-
+  #hdr .nb { display: none !important; }
   #hdr {
     padding: 6px 10px;
-    gap: 4px;
-    min-height: 48px;
+    min-height: 46px;
     flex-wrap: nowrap;
+    gap: 4px;
   }
-  .ht     { font-size: 10px; letter-spacing: 0.5px; }
-  .stat   { font-size: 9px; }
+  .ht { font-size: 10px; }
+  .stat { font-size: 9px; }
   .stat strong { font-size: 11px; }
 
-  /* Stack: map top, panel bottom */
   #body { flex-direction: column; }
-  #map-wrap { height: 42vh; flex: none; position: relative; }
+  #map-wrap { height: 40vh; flex: none; position: relative; }
   #right {
     width: 100%;
     border-left: none;
-    border-top: 1px solid var(--brd);
+    border-top: 1px solid #1e2d3d;
     flex: 1;
     min-height: 0;
   }
-
-  /* World panels scroll */
   .pnl { overflow-y: auto; }
-  .sg  { gap: 5px; padding: 8px; }
-  .sv  { font-size: 14px; }
-  .le  { font-size: 11px; }
 
-  /* Earn / Army */
-  .escroll { padding: 6px; }
-  .ec  { padding: 9px 10px; }
+  /* World stats */
+  .sg { gap: 5px; padding: 7px; }
+  .sv { font-size: 14px; }
+
+  /* Earn / army */
+  .escroll { padding: 5px; }
+  .ec { padding: 9px; margin-bottom: 5px; }
   .ec-n { font-size: 11px; }
   .ec-d { font-size: 10px; }
   .ebtn { padding: 10px; font-size: 11px; min-height: 44px; }
-  .army-s { padding: 8px; }
 
   /* Country panel */
-  #cp-hdr { padding: 10px; }
-  #cp-flag { font-size: 28px; }
-  #cp-name { font-size: 15px; }
+  #cp-flag { font-size: 26px; }
+  #cp-name { font-size: 14px; }
   .cc { padding: 9px; }
   .cc-nm { font-size: 11px; }
   .cc-info { font-size: 10px; }
-  .cbt { padding: 9px; font-size: 10px; min-height: 40px; }
-  #cp-full { padding: 12px; font-size: 12px; min-height: 48px; }
-  #cp-back { padding: 11px; font-size: 12px; min-height: 44px; }
+  .cbt { padding: 9px; min-height: 40px; font-size: 10px; }
+  #cp-full, #cp-back { padding: 12px; font-size: 12px; min-height: 44px; }
 
-  /* Zoom — bigger touch targets */
-  #zoom-ctrl { bottom: 10px; right: 10px; gap: 6px; }
-  .zb { padding: 12px 18px; font-size: 18px; min-width: 50px; min-height: 48px; }
-  #zoom-level { font-size: 9px; }
+  /* Zoom buttons */
+  .zb { padding: 12px 16px; font-size: 18px; min-height: 48px; min-width: 48px; }
 
   /* Invasion alert */
-  #inv-alert { max-width: calc(100% - 24px); font-size: 11px; }
-  .ia-flag { font-size: 20px; }
+  #inv-alert { max-width: calc(100% - 20px); font-size: 11px; }
 
-  /* Invasion modal — bottom sheet */
-  #inv { padding: 0; justify-content: flex-end; }
-  .ibox {
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-    max-height: 92vh;
-    overflow-y: auto;
+  /* Invasion / quiz modals: bottom sheets */
+  #inv  { padding: 0 !important; justify-content: flex-end !important; }
+  #qov  { padding: 0 !important; justify-content: flex-end !important; }
+  #def-modal { padding: 0 !important; justify-content: flex-end !important; }
+  .ibox, .qbox, .dbox {
+    max-width: 100% !important;
+    border-radius: 16px 16px 0 0 !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
   }
-  .it  { font-size: 13px; }
-  .isv { font-size: 14px; }
-  .isk { font-size: 9px; }
-  .ia  { padding: 12px; font-size: 12px; min-height: 48px; }
-  .iclose { padding: 13px; font-size: 12px; min-height: 48px; }
-
-  /* City shop tabs */
-  .cstabs { grid-template-columns: repeat(4,1fr); }
-  .cstab  { padding: 9px 2px; font-size: 15px; }
-  .cs-item { padding: 9px 10px; }
-  .cs-nm  { font-size: 11px; }
-  .cs-ds  { font-size: 10px; }
-  .cs-btn { padding: 10px; font-size: 10px; min-height: 44px; }
-
-  /* Quiz — bottom sheet */
-  #qov { padding: 0; justify-content: flex-end; }
-  .qbox {
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-    padding: 20px 16px 32px;
-    gap: 10px;
-    max-height: 92vh;
-    overflow-y: auto;
-  }
+  .ibox { padding-bottom: 24px; }
+  .qbox { padding: 20px 16px 32px; gap: 10px; }
+  .dbox { padding: 20px 16px 32px; }
   .qtxt { font-size: 14px; }
-  .qopts { gap: 8px; }
   .qo   { padding: 13px; font-size: 13px; min-height: 48px; }
-  .qskip  { padding: 12px; min-height: 44px; font-size: 12px; }
-  #qnxt-earn { padding: 13px; font-size: 13px; min-height: 48px; }
-  #q-mode-label { font-size: 13px; }
+  .qskip, #qnxt-earn { padding: 12px; min-height: 44px; font-size: 12px; }
+  .ia   { padding: 12px; font-size: 12px; min-height: 48px; }
+  .iclose { padding: 12px; min-height: 44px; }
 
-  /* Defense modal — bottom sheet */
-  #def-modal { padding: 0; justify-content: flex-end; }
-  .dbox {
-    max-width: 100%;
-    border-radius: 16px 16px 0 0;
-    padding: 20px 16px 32px;
-  }
-  .dt  { font-size: 14px; }
-  .dstats { gap: 6px; }
+  /* City shop */
+  .cstabs { grid-template-columns: repeat(4,1fr); }
+  .cstab { padding: 9px 2px; font-size: 16px; }
+  .cs-item { padding: 9px; }
+  .cs-nm { font-size: 11px; }
+  .cs-ds { font-size: 10px; }
+  .cs-btn { padding: 10px; min-height: 44px; font-size: 10px; }
 
   /* Footer */
   #foot { padding: 5px 10px; }
   .fl   { font-size: 9px; }
   #fv   { font-size: 11px; }
 
-  /* Approval bar compact */
+  /* Approval */
   #appr-section { padding: 7px 10px; }
-  #appr-bonuses { gap: 3px; }
+  #appr-bonuses span { font-size: 8px !important; padding: 2px 5px !important; }
 
-  /* Tooltip hidden on mobile (use panel info instead) */
+  /* No tooltip on mobile */
   #tip { display: none !important; }
-
-  /* Victory screen */
-  #vic { padding: 24px 16px; }
-  #vic > div:first-child { font-size: 56px; }
-}
-
-/* Safe area for notched phones */
-@supports (padding: env(safe-area-inset-bottom)) {
-  #kd-mobile-nav, #wg-mobile-nav {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
 }
 
 </style>
@@ -2746,33 +2694,46 @@ setInterval(()=>{
 <script>
 
 
-// Mobile bottom nav helpers
-function mbnActive(id) {
-  document.querySelectorAll('#kd-mobile-nav .mbn').forEach(b => b.classList.remove('on'));
-  var el = document.getElementById(id); if(el) el.classList.add('on');
-  // On mobile: show map SVG area when MAP pressed, hide it when other tab
+
+// ── Mobile bottom nav ────────────────────────────────────────────────────────
+function mbnGo(panel, btnId) {
+  setPanel(panel);
+  document.querySelectorAll('#kd-mobile-nav .mbn').forEach(function(b){ b.classList.remove('on'); });
+  var el = document.getElementById(btnId); if(el) el.classList.add('on');
+  // When switching to non-map panel, collapse map to give more room
   var gmap = document.getElementById('gd-map');
-  if(!gmap) return;
-  if(id === 'mbn-map') {
-    gmap.style.display = '';
-    document.getElementById('gd-right').style.flex = '1';
-  } else {
-    // Show full panel, shrink map
-    gmap.style.height = '0';
-    gmap.style.overflow = 'hidden';
-    document.getElementById('gd-right').style.flex = '1';
+  if(gmap) gmap.style.height = (panel === 'ov' && btnId === 'mbn-map') ? '' : '28vh';
+}
+function wmbnGo(panel, btnId) {
+  setP_W(panel);
+  document.querySelectorAll('#wg-mobile-nav .mbn').forEach(function(b){ b.classList.remove('on'); });
+  var el = document.getElementById(btnId); if(el) el.classList.add('on');
+}
+function showMobileNav() {
+  var isMobile = window.innerWidth <= 767;
+  var kdNav = document.getElementById('kd-mobile-nav');
+  var wgNav = document.getElementById('wg-mobile-nav');
+  var inWorld = document.getElementById('world-game').style.display !== 'none' &&
+                document.getElementById('world-game').style.display !== '';
+  if(kdNav) kdNav.style.display = (isMobile && !inWorld) ? 'flex' : 'none';
+  if(wgNav) wgNav.style.display = (isMobile && inWorld)  ? 'flex' : 'none';
+  // Set active state
+  if(isMobile && !inWorld) {
+    var mmap = document.getElementById('mbn-map');
+    if(mmap) mmap.classList.add('on');
+  }
+  if(isMobile && inWorld) {
+    var wmap = document.getElementById('wmbn-map');
+    if(wmap) wmap.classList.add('on');
   }
 }
-function wmbnActive(id) {
-  document.querySelectorAll('#wg-mobile-nav .mbn').forEach(b => b.classList.remove('on'));
-  var el = document.getElementById(id); if(el) el.classList.add('on');
-}
-// Patch setPanel to sync mobile nav
-var _origSetPanel = window.setPanel;
-window.setPanel = function(p) {
-  _origSetPanel(p);
-  var map = {'ov':'mbn-map','sh':'mbn-shop','lb':'mbn-lab'};
-  if(map[p]) mbnActive(map[p]);
+window.addEventListener('load', showMobileNav);
+window.addEventListener('resize', showMobileNav);
+// Show world nav after goWorld()
+var _bridgeGoWorld = goWorld;
+goWorld = function() {
+  _bridgeGoWorld();
+  setTimeout(showMobileNav, 200);
 };
 
 // Stage bridge: early game → world conquest
@@ -2811,6 +2772,22 @@ window.doTransition = function() {
 };
 
 </script>
+
+
+<!-- MOBILE BOTTOM NAV: early game -->
+<div id="kd-mobile-nav" style="display:none">
+  <button class="mbn" id="mbn-map"    onclick="mbnGo('ov','mbn-map')">&#x1F5FA;<br>Map</button>
+  <button class="mbn" id="mbn-shop"   onclick="mbnGo('sh','mbn-shop')">&#x1F6D2;<br>Shop</button>
+  <button class="mbn" id="mbn-lab"    onclick="mbnGo('lb','mbn-lab')">&#x2697;&#xFE0F;<br>Lab</button>
+  <button class="mbn" id="mbn-status" onclick="mbnGo('ov','mbn-status')">&#x1F4CA;<br>Status</button>
+</div>
+
+<!-- MOBILE BOTTOM NAV: world game -->
+<div id="wg-mobile-nav" style="display:none">
+  <button class="mbn" id="wmbn-map"  onclick="wmbnGo('ov','wmbn-map')">&#x1F5FA;<br>Map</button>
+  <button class="mbn" id="wmbn-earn" onclick="wmbnGo('earn','wmbn-earn')">&#x1F4B0;<br>Earn</button>
+  <button class="mbn" id="wmbn-army" onclick="wmbnGo('army','wmbn-army')">&#x1F4AA;<br>Army</button>
+</div>
 
 </body>
 </html>
