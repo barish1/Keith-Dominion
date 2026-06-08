@@ -953,10 +953,10 @@ button, a, [onclick] {
 <div id="hdr">
   <div><div class="ht">&#x2697;&#xFE0F; KEITH DOMINION &mdash; WORLD</div></div>
   <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-    <div class="stat">&#x1F4B5; <strong id="h-gb">600,000</strong></div>
-    <div class="stat army">&#x1F4AA; <strong id="h-army">100,000</strong> soldiers</div>
-    <div class="stat">&#x1F310; <strong id="h-con">1</strong>/195</div>
-    <div class="stat" style="color:#7dd3fc">&#x2B50; <strong id="h-appr">0</strong>% approval</div>
+    <div class="stat">&#x1F4B5; <strong id="wh-gb">600,000</strong></div>
+    <div class="stat army">&#x1F4AA; <strong id="wh-army">100,000</strong> soldiers</div>
+    <div class="stat">&#x1F310; <strong id="wh-con">1</strong>/195</div>
+    <div class="stat" style="color:#7dd3fc">&#x2B50; <strong id="wh-appr">0</strong>% approval</div>
   </div>
   <div style="display:flex;gap:4px">
     <button class="nb on" onclick="setP_W('ov')">&#x1F4CD; MAP</button>
@@ -981,9 +981,9 @@ button, a, [onclick] {
   <div id="right">
     <div class="pnl" id="pnl-ov">
       <div class="sg">
-        <div class="sc"><span class="sv" id="s-gb" style="color:var(--goldl)">600,000</span><span class="sk">Greenbacks</span></div>
-        <div class="sc"><span class="sv" id="s-army" style="color:#ffbb44">100,000</span><span class="sk">Soldiers</span></div>
-        <div class="sc"><span class="sv" id="s-con" style="color:var(--bluel)">1</span><span class="sk">Countries</span></div>
+        <div class="sc"><span class="sv" id="ws-gb" style="color:var(--goldl)">600,000</span><span class="sk">Greenbacks</span></div>
+        <div class="sc"><span class="sv" id="ws-army" style="color:#ffbb44">100,000</span><span class="sk">Soldiers</span></div>
+        <div class="sc"><span class="sv" id="ws-con" style="color:var(--bluel)">1</span><span class="sk">Countries</span></div>
         <div class="sc"><span class="sv" id="s-appr" style="color:#7dd3fc">0%</span><span class="sk">Global Approval</span></div>
       </div>
 
@@ -1087,8 +1087,8 @@ button, a, [onclick] {
   <div id="q-mode-label">&#x2697;&#xFE0F; CHEMISTRY QUESTION</div>
   <div id="q-mode-sub" style="font-size:9px;color:var(--dim);text-align:center;margin-top:3px"></div>
   <div class="qtxt" id="qtxt"></div>
-  <div class="qopts" id="qopts"></div>
-  <div class="qfb" id="qfb"></div>
+  <div class="qopts" id="wq-opts"></div>
+  <div class="qfb" id="wq-fb"></div>
   <button id="qnxt-earn" style="display:none">Collect Reward &rarr;</button>
   <button class="qskip" onclick="closeQ()">Skip (no reward)</button>
 </div></div>
@@ -1125,6 +1125,79 @@ button, a, [onclick] {
 </div>
 
 <script>
+var QQ=[
+{q:"Which element has the highest electronegativity?",o:["Oxygen","Nitrogen","Fluorine","Chlorine"],a:2,e:"Fluorine — EN 3.98. The electron gangsta of the table."},
+{q:"What is the molar mass of CO₂? (C=12, O=16)",o:["28 g/mol","32 g/mol","44 g/mol","56 g/mol"],a:2,e:"12 + 2×16 = 44 g/mol."},
+{q:"PV = nRT describes which law?",o:["Boyle's","Charles's","Ideal Gas Law","Dalton's"],a:2,e:"The Ideal Gas Law combines Boyle's, Charles's, and Avogadro's."},
+{q:"Oxidation state of Cr in K₂Cr₂O₇?",o:["+3","+5","+6","+7"],a:2,e:"2(+1) + 2Cr + 7(−2) = 0 → Cr = +6."},
+{q:"Beta decay emits what particle?",o:["Alpha","Electron","Gamma ray","Positron"],a:1,e:"β decay: neutron → proton + electron (β⁻ particle)."},
+{q:"VSEPR shape of CH₄?",o:["Linear","Trigonal planar","Tetrahedral","Octahedral"],a:2,e:"4 bonds, 0 lone pairs → tetrahedral, 109.5°."},
+{q:"pH of 0.01 M HCl solution?",o:["1","2","3","4"],a:1,e:"pH = −log[H⁺] = −log(10⁻²) = 2."},
+{q:"Oxidation occurs at which electrode in a galvanic cell?",o:["Cathode","Anode","Salt bridge","Membrane"],a:1,e:"OIL RIG: Oxidation Is Loss at the Anode."},
+{q:"Which nonmetal is liquid at room temperature?",o:["Bromine","Gallium","Cesium","Iodine"],a:0,e:"Bromine (Br₂) — the only nonmetal liquid at 25°C."},
+{q:"Avogadro's constant is approximately...",o:["6.02×10²³","3.14×10⁸","9.81×10²","1.38×10⁻²³"],a:0,e:"6.022×10²³ particles per mole."},
+{q:"Molarity is defined as...",o:["mass/volume","moles × volume","moles/litre","density × MW"],a:2,e:"M = moles of solute ÷ litres of solution."},
+{q:"Le Chatelier: adding a product shifts equilibrium...",o:["Right","Left","No change","Both directions"],a:1,e:"System opposes the change — shifts LEFT to consume excess product."},
+{q:"Acid + base → ?",o:["Oxide + gas","Salt + water","Ester + water","Peroxide + H₂"],a:1,e:"Neutralisation: acid + base → salt + water."},
+{q:"Atomic number of Carbon?",o:["12","6","8","14"],a:1,e:"Atomic number = proton count. Carbon has 6 protons."},
+{q:"Which bond has the highest bond energy?",o:["C−C single","C=C double","C≡C triple","C−H"],a:2,e:"Triple bonds have the highest energy and shortest length."},
+{q:"Which has the highest first ionisation energy in period 2?",o:["Li","Na","Ne","Cs"],a:2,e:"Noble gases have full shells — Ne has the highest IE in period 2."},
+{q:"Chemical formula for sulfuric acid?",o:["HCl","H₂SO₄","HNO₃","H₃PO₄"],a:1,e:"H₂SO₄ — sulfuric acid, a strong diprotic acid."},
+{q:"How many valence electrons does Oxygen have?",o:["4","6","8","2"],a:1,e:"Oxygen is in group 16 — 6 valence electrons."},
+{q:"2H₂ + O₂ → ?",o:["H₂O₂","2H₂O","H₄O₂","2HO"],a:1,e:"Combustion of hydrogen produces water: 2H₂O."},
+{q:"The Bohr model describes discrete...",o:["Nuclear spin states","Electron energy levels","Proton orbitals","Neutron shells"],a:1,e:"Bohr explained hydrogen's discrete atomic emission spectra via energy levels."},
+{q:"What is the half-life of a radioactive isotope?",o:["Time for 25% to decay","Time for 50% to decay","Time for 75% to decay","Full decay time"],a:1,e:"Half-life = time for half the atoms to undergo radioactive decay."},
+{q:"Isotopes of the same element differ in...",o:["Protons","Electrons","Neutrons","Charge"],a:2,e:"Isotopes have the same proton count but different neutron counts."},
+{q:"Ground state electron config of Na (Z=11)?",o:["1s²2s²2p⁶3s¹","1s²2s²2p⁵3s²","1s²2s²2p⁶3p¹","1s²2s²3s²2p⁶"],a:0,e:"Na: [Ne] 3s¹ — one valence electron in the 3s orbital."},
+{q:"Which type of radiation is most penetrating?",o:["Alpha","Beta","Gamma","Neutron"],a:2,e:"Gamma rays are high-energy photons — penetrate concrete and lead."},
+{q:"Hess's Law states that enthalpy change is...",o:["Path-dependent","Temperature-dependent","Path-independent","Pressure-dependent"],a:2,e:"Enthalpy is a state function — total ΔH is independent of path."},
+{q:"A reaction with ΔG < 0 is...",o:["Non-spontaneous","Spontaneous","At equilibrium","Endothermic only"],a:1,e:"Negative Gibbs free energy = spontaneous reaction."},
+{q:"The equilibrium constant K > 1 means...",o:["Reactants favoured","Products favoured","Reaction is fast","ΔG = 0"],a:1,e:"K > 1: products predominate at equilibrium."},
+{q:"What type of catalyst is an enzyme?",o:["Heterogeneous","Homogeneous","Biological","Inorganic"],a:2,e:"Enzymes are biological (protein) catalysts."},
+{q:"A buffer solution resists changes in...",o:["Temperature","Volume","pH","Pressure"],a:2,e:"Buffers contain a weak acid/base pair that absorbs H⁺ or OH⁻."},
+{q:"Henderson-Hasselbalch: pH = pKa + log([A⁻]/[HA]). If [A⁻]=[HA], pH = ?",o:["pKa + 1","pKa − 1","pKa","2×pKa"],a:2,e:"log(1) = 0, so pH = pKa when concentrations are equal."},
+{q:"An empirical formula shows...",o:["Actual atom count","Simplest whole-number ratio","3D structure","Molecular weight"],a:1,e:"Empirical formula: simplest ratio. Molecular formula: actual counts."},
+{q:"In a limiting reagent problem, which is used up first?",o:["Excess reagent","Limiting reagent","Catalyst","Solvent"],a:1,e:"Limiting reagent is fully consumed, stopping the reaction."},
+{q:"Percent yield = ?",o:["theoretical/actual×100","actual/theoretical×100","actual−theoretical","theoretical−actual"],a:1,e:"% yield = (actual yield ÷ theoretical yield) × 100."},
+{q:"Which intermolecular force is strongest?",o:["London dispersion","Dipole-dipole","Hydrogen bonding","Ion-dipole"],a:3,e:"Ion-dipole is strongest. Within molecular compounds, H-bonding is strongest."},
+{q:"Hydrogen bonding requires H bonded to...",o:["Any atom","C, S, or P","F, O, or N","Halogens only"],a:2,e:"H-bonding: H attached to highly electronegative F, O, or N."},
+{q:"A polar molecule has...",o:["Equal electron sharing","Net dipole moment","Only ionic bonds","Symmetric shape"],a:1,e:"Polar molecules have an unequal charge distribution — net dipole ≠ 0."},
+{q:"sp³ hybridisation gives which geometry?",o:["Linear","Trigonal planar","Tetrahedral","Bent"],a:2,e:"sp³: 4 hybrid orbitals, tetrahedral arrangement (e.g., CH₄)."},
+{q:"Which functional group defines an alcohol?",o:["−COOH","−OH","−NH₂","−CHO"],a:1,e:"Alcohols contain the hydroxyl group (−OH) bonded to carbon."},
+{q:"Alkenes are characterised by...",o:["C−C single bond","C=C double bond","C≡C triple bond","C−H bond"],a:1,e:"Alkenes contain at least one C=C double bond."},
+{q:"Benzene's stability arises from...",o:["Alternating single/double bonds","Delocalised π electrons","sp³ carbons","Ionic character"],a:1,e:"Benzene's 6 π electrons are delocalised across the ring — aromatic stability."},
+{q:"Name the compound: NaCl",o:["Sodium chlorate","Sodium chloride","Sodium perchlorate","Sodium hypochlorite"],a:1,e:"NaCl = sodium chloride. The −ide suffix for a single anion."},
+{q:"HNO₃ is called...",o:["Nitrous acid","Hyponitrous acid","Nitric acid","Nitrate acid"],a:2,e:"HNO₃ = nitric acid. Strong acid, used in fertilisers and explosives."},
+{q:"Which equation is balanced? Combustion of methane.",o:["CH₄+O₂→CO₂+H₂O","CH₄+2O₂→CO₂+2H₂O","2CH₄+O₂→CO₂+H₂O","CH₄+O₂→2CO₂+H₂O"],a:1,e:"CH₄ + 2O₂ → CO₂ + 2H₂O. Balanced: 1C, 4H, 4O each side."},
+{q:"In a redox reaction, the reducing agent...",o:["Gains electrons","Loses electrons","Gains protons","Is unchanged"],a:1,e:"Reducing agent donates electrons (is itself oxidised)."},
+{q:"Standard hydrogen electrode (SHE) has E° = ?",o:["−1.0 V","0 V","+1.0 V","+2.0 V"],a:1,e:"SHE is the reference electrode, defined as 0.00 V."},
+{q:"Electrolysis of water produces...",o:["H₂ at cathode, O₂ at anode","O₂ at cathode, H₂ at anode","H₂ at both electrodes","O₂ at both electrodes"],a:0,e:"Reduction at cathode: 2H⁺ + 2e⁻ → H₂. Oxidation at anode: 4OH⁻ → O₂ + 2H₂O + 4e⁻."},
+{q:"Boiling point elevation is a colligative property depending on...",o:["Solute identity","Solvent identity","Number of solute particles","Solute colour"],a:2,e:"Colligative properties depend only on the number of dissolved particles."},
+{q:"Which quantum number defines the orbital shape?",o:["n (principal)","l (azimuthal)","m_l (magnetic)","m_s (spin)"],a:1,e:"l = azimuthal quantum number: 0=s, 1=p, 2=d, 3=f."},
+{q:"What does a catalyst do to activation energy?",o:["Increases it","Decreases it","Doesn't affect it","Doubles it"],a:1,e:"Catalysts lower activation energy, speeding up the reaction without being consumed."},
+{q:"Rate law: rate = k[A]². Doubling [A] multiplies rate by...",o:["2","3","4","8"],a:2,e:"Second-order: rate ∝ [A]². Double [A] → 2² = 4× faster."},
+{q:"SN2 reactions proceed with...",o:["Retention of configuration","Inversion of configuration","Racemisation","No stereochemical change"],a:1,e:"SN2: backside attack causes Walden inversion (complete inversion)."},
+{q:"Which gas law: V ∝ T at constant P?",o:["Boyle's","Charles's","Avogadro's","Gay-Lussac's"],a:1,e:"Charles's Law: volume is proportional to absolute temperature at constant pressure."},
+{q:"Graham's Law: rate of effusion ∝ ?",o:["√M","1/M","M²","1/√M"],a:3,e:"Rate ∝ 1/√M: lighter gases effuse faster (Graham's Law)."},
+{q:"The Aufbau principle states electrons fill orbitals...",o:["From highest energy","From lowest energy","Randomly","By spin first"],a:1,e:"Electrons occupy the lowest available energy orbital first."},
+{q:"Hund's rule: electrons in degenerate orbitals...",o:["Always pair up","Fill one each before pairing","Fill randomly","Share an orbital"],a:1,e:"One electron per orbital before pairing — minimises electron repulsion."},
+{q:"What is the conjugate base of H₂PO₄⁻?",o:["H₃PO₄","HPO₄²⁻","PO₄³⁻","H₂PO₄"],a:1,e:"Conjugate base = remove H⁺: H₂PO₄⁻ → HPO₄²⁻."},
+{q:"Kw (water autoionisation constant) at 25°C = ?",o:["10⁻⁷","10⁻¹⁴","10⁻¹","10⁻¹⁰"],a:1,e:"Kw = [H⁺][OH⁻] = 1×10⁻¹⁴ at 25°C."},
+{q:"Which process converts glucose to ethanol without oxygen?",o:["Aerobic respiration","Fermentation","Hydrolysis","Condensation"],a:1,e:"Fermentation: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂ (yeast, anaerobic)."},
+{q:"Nylon is an example of which polymer type?",o:["Addition polymer","Condensation polymer","Free-radical polymer","Ionic polymer"],a:1,e:"Nylon is a condensation polymer — forms via loss of small molecules (H₂O or HCl)."},
+{q:"The SI unit of pressure is?",o:["Bar","Atm","Pascal","mmHg"],a:2,e:"Pascal (Pa) = N/m². 1 atm ≈ 101,325 Pa."},
+{q:"Saponification is the reaction of an ester with...",o:["An acid","A strong base","Water only","Another ester"],a:1,e:"Saponification: ester + NaOH → soap (fatty acid salt) + glycerol."},
+];
+let _qSeen=new Set();
+function getUniqueQ(){
+  if(_qSeen.size>=QQ.length-4)_qSeen.clear();
+  let idx;
+  do{idx=Math.floor(Math.random()*QQ.length);}while(_qSeen.has(idx));
+  _qSeen.add(idx);return QQ[idx];
+}
+
+let quizQ=null,quizCallback=null;
+
 const CD=[{n:"India",f:"🇮🇳",c:"IND",r:"Asia",p:1450000000,cx:688.0,cy:195.5,sz:22,col:"#4a8c3f",cities:[{n:"Delhi",p:30300000},{n:"Mumbai",p:25100000},{n:"Kolkata",p:16800000},{n:"Bangalore",p:12200000},{n:"Chennai",p:11300000}],conquered:false,prog:[0,0,0,0,0]},
 {n:"China",f:"🇨🇳",c:"CHN",r:"Asia",p:1420000000,cx:760.0,cy:150.3,sz:22,col:"#4a8c3f",cities:[{n:"Beijing",p:19800000},{n:"Shanghai",p:33600000},{n:"Guangzhou",p:46700000},{n:"Tianjin",p:12700000},{n:"Xiamen",p:10000000}],conquered:false,prog:[0,0,0,0,0]},
 {n:"United States",f:"🇺🇸",c:"USA",r:"Americas",p:345430000,cx:224.0,cy:140.3,sz:17,col:"#2060a0",cities:[{n:"New York City",p:22100000},{n:"Los Angeles",p:17700000},{n:"Chicago",p:9750000},{n:"San Francisco",p:7850000},{n:"Washington, D.C.",p:8550000}],conquered:true,prog:[100,100,100,100,100]},
@@ -1321,6 +1394,7 @@ const CD=[{n:"India",f:"🇮🇳",c:"IND",r:"Asia",p:1450000000,cx:688.0,cy:195.
 {n:"Tuvalu",f:"🇹🇻",c:"TUV",r:"Oceania",p:9650,cx:957.3,cy:271.4,sz:3,col:"#8030a0",cities:[{n:"Funafuti",p:6111},{n:"Asau",p:650},{n:"Vaiaku",p:516},{n:"East District",p:1000},{n:"West District",p:1000}],conquered:false,prog:[0,0,0,0,0]},
 {n:"Vatican City",f:"🇻🇦",c:"VAT",r:"Europe",p:496,cx:512.0,cy:126.4,sz:3,col:"#c8a020",cities:[{n:"Vatican City",p:801},{n:"North District",p:1000},{n:"South District",p:1000},{n:"East District",p:1000},{n:"West District",p:1000}],conquered:false,prog:[0,0,0,0,0]}];
 const ISO={4:"Afghanistan",8:"Albania",12:"Algeria",20:"Andorra",24:"Angola",32:"Argentina",36:"Australia",40:"Austria",44:"Bahamas",50:"Bangladesh",52:"Barbados",56:"Belgium",64:"Bhutan",68:"Bolivia",70:"Bosnia and Herzegovina",72:"Botswana",76:"Brazil",84:"Belize",90:"Solomon Islands",96:"Brunei",100:"Bulgaria",104:"Myanmar",108:"Burundi",116:"Cambodia",120:"Cameroon",124:"Canada",132:"Cabo Verde",140:"Central African Republic",144:"Sri Lanka",148:"Chad",152:"Chile",156:"China",170:"Colombia",174:"Comoros",178:"Congo",180:"Democratic Republic of the Congo",188:"Costa Rica",191:"Croatia",192:"Cuba",196:"Cyprus",203:"Czech Republic",204:"Benin",208:"Denmark",218:"Ecuador",222:"El Salvador",226:"Equatorial Guinea",231:"Ethiopia",232:"Eritrea",233:"Estonia",242:"Fiji",246:"Finland",250:"France",262:"Djibouti",266:"Gabon",268:"Georgia",270:"Gambia",275:"Palestine",276:"Germany",288:"Ghana",296:"Kiribati",300:"Greece",308:"Grenada",320:"Guatemala",324:"Guinea",328:"Guyana",332:"Haiti",336:"Vatican City",340:"Honduras",348:"Hungary",352:"Iceland",356:"India",360:"Indonesia",364:"Iran",368:"Iraq",372:"Ireland",376:"Israel",380:"Italy",388:"Jamaica",392:"Japan",400:"Jordan",398:"Kazakhstan",404:"Kenya",408:"North Korea",410:"South Korea",414:"Kuwait",417:"Kyrgyzstan",418:"Laos",422:"Lebanon",426:"Lesotho",430:"Liberia",434:"Libya",438:"Liechtenstein",440:"Lithuania",442:"Luxembourg",454:"Malawi",458:"Malaysia",462:"Maldives",466:"Mali",470:"Malta",478:"Mauritania",480:"Mauritius",484:"Mexico",492:"Monaco",496:"Mongolia",498:"Moldova",499:"Montenegro",504:"Morocco",508:"Mozambique",516:"Namibia",520:"Nauru",524:"Nepal",528:"Netherlands",548:"Vanuatu",554:"New Zealand",558:"Nicaragua",562:"Niger",566:"Nigeria",578:"Norway",583:"Micronesia",585:"Palau",586:"Pakistan",591:"Panama",598:"Papua New Guinea",600:"Paraguay",604:"Peru",608:"Philippines",616:"Poland",620:"Portugal",634:"Qatar",642:"Romania",643:"Russia",646:"Rwanda",682:"Saudi Arabia",686:"Senegal",688:"Serbia",694:"Sierra Leone",703:"Slovakia",705:"Slovenia",706:"Somalia",710:"South Africa",716:"Zimbabwe",724:"Spain",728:"South Sudan",729:"Sudan",740:"Suriname",748:"Eswatini",752:"Sweden",756:"Switzerland",760:"Syria",762:"Tajikistan",764:"Thailand",768:"Togo",776:"Tonga",780:"Trinidad and Tobago",788:"Tunisia",792:"Turkey",795:"Turkmenistan",798:"Tuvalu",800:"Uganda",804:"Ukraine",784:"United Arab Emirates",826:"United Kingdom",840:"United States",858:"Uruguay",860:"Uzbekistan",862:"Venezuela",704:"Vietnam",882:"Samoa",887:"Yemen",894:"Zambia",31:"Azerbaijan",51:"Armenia",807:"North Macedonia",384:"Cote d'Ivoire",624:"Guinea-Bissau",690:"Seychelles",854:"Burkina Faso",626:"Timor-Leste",678:"Sao Tome and Principe"};
+
 </script>
 <script>
 
@@ -1348,7 +1422,7 @@ function spendGB(amount){
   if(S.hasTreasurer)S.gb+=Math.floor(amount*0.1);
 }
 
-// QQ: shared 60-question pool defined in world-game script
+// QQ: 60-question pool in world-game script
 
 // Chemistry problems
 const PROBS={
@@ -1742,105 +1816,6 @@ function closePM(){document.getElementById('pm').classList.remove('on');}
 
 // QUIZ
 let QS={idx:0,score:0,dots:[],answered:false,ctx:'nyack'};let QPool=[];
-function openSchool(ctx){
-  if(S.quizWon[ctx]){log(ctx==='nyack'?'Nyack H.S. already defeated.':'Rockland college already defeated.','a');return;}
-  QS.ctx=ctx;
-  document.getElementById('qm').classList.add('on');
-  if(ctx==='rockland'){
-    document.getElementById('qm-title').textContent='&#x1F3EB; ROCKLAND COMMUNITY COLLEGE';
-    document.getElementById('q-icon').textContent='&#x1F469;&#x200D;&#x1F3EB;';
-    document.getElementById('q-name').textContent='Prof. Martinez &mdash; Chemistry Dept.';
-    document.getElementById('q-sub').textContent='Beat me 7/10 for 3,000 votes + 1,000 GB. I score 6/10.';
-  }else{
-    document.getElementById('qm-title').textContent='&#x1F3EB; NYACK H.S. CHALLENGE';
-    document.getElementById('q-icon').textContent='&#x1F468;&#x200D;&#x1F3EB;';
-    document.getElementById('q-name').textContent='Mr. Henderson &mdash; Chemistry Dept.';
-    document.getElementById('q-sub').textContent='Beat me 7/10 for 350 votes. I score 6/10.';
-  }
-  startQuiz();
-}
-function startQuiz(){
-  QPool=[...QQ].sort(()=>Math.random()-.5).slice(0,10);
-  QS={idx:0,score:0,dots:new Array(10).fill(''),answered:false,ctx:QS.ctx};
-  document.getElementById('qres').classList.remove('on');
-  ['qpr','qqb','qopts','qfb'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display=id==='qopts'?'flex':'block';});
-  document.getElementById('qnxt').style.display='none';
-  document.getElementById('qfb').textContent='';
-  renderDots();renderQ();
-}
-function renderDots(){
-  const el=document.getElementById('qdots');if(!el)return;el.innerHTML='';
-  QS.dots.forEach((d,i)=>{const dot=document.createElement('div');dot.className='qd'+(d==='r'?' r':d==='w'?' w':i===QS.idx?' c':'');el.appendChild(dot);});
-}
-function renderQ(){
-  const q=QPool[QS.idx];
-  document.getElementById('qqn').textContent='QUESTION '+(QS.idx+1)+' OF 10';
-  document.getElementById('qpl').textContent='Question '+(QS.idx+1)+' of 10';
-  document.getElementById('qps').textContent='Score: '+QS.score;
-  document.getElementById('qpf').style.width=(QS.idx/10*100)+'%';
-  document.getElementById('qqt').textContent=q.q;
-  document.getElementById('qfb').textContent='';
-  document.getElementById('qnxt').style.display='none';
-  QS.answered=false;
-  const opts=document.getElementById('qopts');opts.innerHTML='';
-  q.o.forEach((o,i)=>{const b=document.createElement('button');b.className='qo';b.textContent=o;b.onclick=()=>answerQ2(i);opts.appendChild(b);});
-  renderDots();
-}
-function answerQ2(chosen){
-  if(QS.answered)return;QS.answered=true;
-  const q=QPool[QS.idx];const btns=document.querySelectorAll('.qo');btns.forEach(b=>b.disabled=true);
-  const ok=chosen===q.a;
-  if(ok){btns[chosen].classList.add('ok');QS.score++;QS.dots[QS.idx]='r';document.getElementById('qfb').textContent='&#x2705; Correct! '+q.e;document.getElementById('qfb').style.color='var(--grnl)';}
-  else{btns[chosen].classList.add('no');btns[q.a].classList.add('ok');QS.dots[QS.idx]='w';document.getElementById('qfb').textContent='&#x274C; Wrong. '+q.e;document.getElementById('qfb').style.color='var(--redl)';}
-  document.getElementById('qps').textContent='Score: '+QS.score;renderDots();
-  const nx=document.getElementById('qnxt');nx.style.display='block';
-  nx.style.background=QS.idx<9?'var(--b2)':'var(--amb)';nx.style.color=QS.idx<9?'var(--text)':'#000';
-  nx.style.border=QS.idx<9?'1px solid var(--brd)':'none';nx.style.borderRadius='8px';nx.style.padding='10px 20px';
-  nx.textContent=QS.idx<9?'Next &rarr;':'See Results &rarr;';
-}
-function nextQ(){QS.idx<9?(QS.idx++,renderQ()):showQRes();}
-function showQRes(){
-  ['qpr','qqb','qopts','qfb','qnxt'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
-  const win=QS.score>=7;const ctx=QS.ctx;
-  const res=document.getElementById('qres');res.classList.add('on');
-  document.getElementById('qri').textContent=win?'&#x1F3C6;':'&#x1F614;';
-  document.getElementById('qrt').textContent=win?'YOU BEAT THE TEACHER!':'You lost.';
-  document.getElementById('qrt').style.color=win?'var(--goldl)':'var(--redl)';
-  const sc=document.getElementById('qrs');sc.textContent=QS.score+' / 10';
-  sc.style.background=win?'rgba(16,185,129,.15)':'rgba(239,68,68,.1)';
-  sc.style.color=win?'var(--grnl)':'var(--redl)';
-  sc.style.border='1px solid '+(win?'var(--grn)':'var(--red)');
-  const rb=document.getElementById('qr-retry');
-  if(win){
-    rb.style.display='none';
-    document.getElementById('qr-close').style.cssText='background:var(--grn);color:#000;border:none;padding:11px 24px;border-radius:8px;font-family:Courier New;font-size:12px;font-weight:700;cursor:pointer;margin:4px';
-    document.getElementById('qr-close').textContent='&#x2713; Collect & Close';
-    if(!S.quizWon[ctx]){
-      S.quizWon[ctx]=true;
-      if(ctx==='nyack'){
-        S.votes+=350;
-        document.getElementById('qrsub').textContent='My man. '+QS.score+'/10 — Henderson only got 6. The whole student body is behind you. +350 votes!';
-        log('&#x1F3C6; Keith defeated Mr. Henderson '+QS.score+'/10! +350 votes from Nyack H.S.','g');
-        const lbl=document.getElementById('hs-ny-lbl');if(lbl){lbl.textContent='&#x2714; DEFEATED';}
-      }else{
-        S.votes+=3000;S.gb+=1000;
-        document.getElementById('qrsub').textContent='Impressive, Keith. '+QS.score+'/10. The faculty backs you. +3,000 votes + 1,000 GB!';
-        log('&#x1F3C6; Keith defeated Prof. Martinez '+QS.score+'/10! +3,000 votes + 1,000 GB!','g');
-        const lbl=document.getElementById('hs-rc-lbl');if(lbl){lbl.textContent='&#x2714; DEFEATED';}
-      }
-      updateUI();checkWin();
-    }else{document.getElementById('qrsub').textContent='Quiz already won — votes already counted.';}
-  }else{
-    rb.style.display='block';
-    document.getElementById('qr-close').style.cssText='background:var(--b2);color:var(--text);border:1px solid var(--brd);padding:11px 24px;border-radius:8px;font-family:Courier New;font-size:12px;font-weight:700;cursor:pointer;margin:4px';
-    document.getElementById('qr-close').textContent='Exit';
-    const ins={0:'Zero. Out of ten.',1:'One. Did you even try?',2:'Two. Embarrassing.',3:'Three. Below passing.',4:'Four. Mediocre.',5:'Five. Average.',6:'Six. You tied me. Not enough.'};
-    document.getElementById('qrsub').textContent='Teacher: "'+(ins[QS.score]||'Try harder.')+'" You need 7/10 to win.';
-    log('Quiz: '+QS.score+'/10. Need 7 to win.','b');
-  }
-}
-function closeQuiz(){document.getElementById('qm').classList.remove('on');}
-
 // ELECTION & TRANSITIONS
 function checkWin(){if(S.votes>=req())log('&#x1F5F3;&#xFE0F; Enough votes! Click RUN FOR ELECTION in the overview panel.','g');}
 function runElection(){
@@ -1952,8 +1927,110 @@ function log(msg,t){
 
 setPanel('ov');updateUI();
 
+function qEl(id){return document.getElementById(id);}
+function openSchool(ctx){
+  if(S.quizWon[ctx]){log(ctx==='nyack'?'Already defeated Nyack H.S.':'Already defeated Rockland.','a');return;}
+  QS.ctx=ctx;
+  qEl('qm').classList.add('on');
+  if(ctx==='rockland'){
+    qEl('qm-title').innerHTML='&#x1F3EB; ROCKLAND COMMUNITY COLLEGE';
+    qEl('q-icon').innerHTML='&#x1F469;&#x200D;&#x1F3EB;';
+    qEl('q-name').innerHTML='Prof. Martinez &mdash; Chemistry Dept.';
+    qEl('q-sub').innerHTML='Beat 7/10 for 3,000 votes + 1,000 GB. I score 6/10.';
+  } else {
+    qEl('qm-title').innerHTML='&#x1F3EB; NYACK H.S. CHALLENGE';
+    qEl('q-icon').innerHTML='&#x1F468;&#x200D;&#x1F3EB;';
+    qEl('q-name').innerHTML='Mr. Henderson &mdash; Chemistry';
+    qEl('q-sub').innerHTML='Beat 7/10 for 350 votes. I score 5/10.';
+  }
+  startQuiz();
+}
+function startQuiz(){
+  if(typeof QQ==='undefined'||!QQ.length){log('Questions not ready.','b');return;}
+  QPool=[...QQ].sort(()=>Math.random()-0.5).slice(0,10);
+  QS={idx:0,score:0,dots:new Array(10).fill(''),answered:false,ctx:QS.ctx};
+  var e;
+  e=qEl('qres');if(e)e.classList.remove('on');
+  e=qEl('qpr');if(e)e.style.display='block';
+  e=qEl('qqb');if(e)e.style.display='block';
+  e=qEl('qopts');if(e)e.style.display='flex';
+  e=qEl('qfb');if(e){e.style.display='block';e.textContent='';}
+  e=qEl('qnxt');if(e)e.style.display='none';
+  renderDots();renderQ();
+}
+function renderDots(){
+  var el=qEl('qdots');if(!el)return;
+  el.innerHTML='';
+  QS.dots.forEach(function(d,i){
+    var dot=document.createElement('div');
+    dot.className='qd'+(d==='r'?' r':d==='w'?' w':i===QS.idx?' c':'');
+    el.appendChild(dot);
+  });
+}
+function renderQ(){
+  var q=QPool[QS.idx];if(!q)return;
+  var e;
+  e=qEl('qqn');if(e)e.textContent='QUESTION '+(QS.idx+1)+' OF 10';
+  e=qEl('qpl');if(e)e.textContent='Question '+(QS.idx+1)+' of 10';
+  e=qEl('qps');if(e)e.textContent='Score: '+QS.score;
+  e=qEl('qpf');if(e)e.style.width=(QS.idx/10*100)+'%';
+  e=qEl('qqt');if(e)e.textContent=q.q;
+  e=qEl('qfb');if(e){e.textContent='';e.style.color='';}
+  e=qEl('qnxt');if(e)e.style.display='none';
+  QS.answered=false;
+  var opts=qEl('qopts');if(!opts)return;
+  opts.innerHTML='';
+  q.o.forEach(function(o,i){
+    var b=document.createElement('button');
+    b.className='qo';b.textContent=o;
+    (function(idx){b.onclick=function(){answerQ2(idx);};})(i);
+    opts.appendChild(b);
+  });
+  renderDots();
+}
+function answerQ2(chosen){
+  if(QS.answered)return;QS.answered=true;
+  var q=QPool[QS.idx];if(!q)return;
+  var opts=qEl('qopts');if(!opts)return;
+  var btns=opts.querySelectorAll('.qo');
+  btns.forEach(function(b){b.disabled=true;});
+  var ok=(chosen===q.a);
+  if(btns[chosen])btns[chosen].classList.add(ok?'ok':'no');
+  if(!ok&&btns[q.a])btns[q.a].classList.add('ok');
+  if(ok){QS.score++;QS.dots[QS.idx]='r';}else{QS.dots[QS.idx]='w';}
+  var qfb=qEl('qfb');
+  if(qfb){qfb.innerHTML=(ok?'&#x2705; Correct! ':'&#x274C; Wrong. ')+q.e;qfb.style.color=ok?'var(--grnl)':'var(--redl)';}
+  renderDots();
+  var qnxt=qEl('qnxt');if(qnxt)qnxt.style.display='block';
+}
+function nextQ(){if(QS.idx<9){QS.idx++;renderQ();}else{showQRes();}}
+function showQRes(){
+  ['qpr','qqb','qopts','qfb','qnxt'].forEach(function(id){var e=qEl(id);if(e)e.style.display='none';});
+  var win=QS.score>=7;var ctx=QS.ctx;
+  var res=qEl('qres');if(res)res.classList.add('on');
+  var qri=qEl('qri');if(qri)qri.innerHTML=win?'&#x1F3C6;':'&#x1F614;';
+  var qrt=qEl('qrt');if(qrt)qrt.innerHTML=win?'YOU BEAT THE TEACHER!':'Better luck next time!';
+  var qrsc=qEl('qrsc');if(qrsc)qrsc.innerHTML='Score: <b>'+QS.score+'/10</b>';
+  var qrp=qEl('qrp');
+  if(qrp){
+    if(win){
+      if(ctx==='nyack'){S.votes+=350;S.quizWon.nyack=true;qrp.innerHTML='&#x1F3EB; +350 votes!';log('Beat Mr. Henderson! +350 votes.','g');}
+      else{S.votes+=3000;S.gb+=1000;S.quizWon.rockland=true;qrp.innerHTML='&#x1F3EB; +3,000 votes +1,000 GB!';log('Beat Prof. Martinez! +3,000 votes +1,000 GB.','g');}
+      updateUI();
+    } else {
+      qrp.innerHTML='&#x1F4DA; Study more chemistry and try again!';
+    }
+  }
+}
+function closeQuiz(){var e=qEl('qm');if(e)e.classList.remove('on');}
+function endQuiz(){closeQuiz();}
+
 </script>
 <script>
+
+
+
+
 const G={gb:600000,army:100000,votes:0,conquered:1,panel:'ov',curCountry:null,curCityIdx:null,
   earnCD:{},invState:{quizBonus:false},invTab:'mil',shopTab:'po',
   citySick:{},secLevel:0,hasTreasurer:false,nukePlant:false,ironDome:false,
@@ -2386,93 +2463,24 @@ function showIR(msg,t){
 }
 
 // ── QUIZ (shared: combat + earn challenges) ──────────────────────────────────
-const QQ=[
-{q:"Which element has the highest electronegativity?",o:["Oxygen","Nitrogen","Fluorine","Chlorine"],a:2,e:"Fluorine — EN 3.98. The electron gangsta of the table."},
-{q:"What is the molar mass of CO₂? (C=12, O=16)",o:["28 g/mol","32 g/mol","44 g/mol","56 g/mol"],a:2,e:"12 + 2×16 = 44 g/mol."},
-{q:"PV = nRT describes which law?",o:["Boyle's","Charles's","Ideal Gas Law","Dalton's"],a:2,e:"The Ideal Gas Law combines Boyle's, Charles's, and Avogadro's."},
-{q:"Oxidation state of Cr in K₂Cr₂O₇?",o:["+3","+5","+6","+7"],a:2,e:"2(+1) + 2Cr + 7(−2) = 0 → Cr = +6."},
-{q:"Beta decay emits what particle?",o:["Alpha","Electron","Gamma ray","Positron"],a:1,e:"β decay: neutron → proton + electron (β⁻ particle)."},
-{q:"VSEPR shape of CH₄?",o:["Linear","Trigonal planar","Tetrahedral","Octahedral"],a:2,e:"4 bonds, 0 lone pairs → tetrahedral, 109.5°."},
-{q:"pH of 0.01 M HCl solution?",o:["1","2","3","4"],a:1,e:"pH = −log[H⁺] = −log(10⁻²) = 2."},
-{q:"Oxidation occurs at which electrode in a galvanic cell?",o:["Cathode","Anode","Salt bridge","Membrane"],a:1,e:"OIL RIG: Oxidation Is Loss at the Anode."},
-{q:"Which nonmetal is liquid at room temperature?",o:["Bromine","Gallium","Cesium","Iodine"],a:0,e:"Bromine (Br₂) — the only nonmetal liquid at 25°C."},
-{q:"Avogadro's constant is approximately...",o:["6.02×10²³","3.14×10⁸","9.81×10²","1.38×10⁻²³"],a:0,e:"6.022×10²³ particles per mole."},
-{q:"Molarity is defined as...",o:["mass/volume","moles × volume","moles/litre","density × MW"],a:2,e:"M = moles of solute ÷ litres of solution."},
-{q:"Le Chatelier: adding a product shifts equilibrium...",o:["Right","Left","No change","Both directions"],a:1,e:"System opposes the change — shifts LEFT to consume excess product."},
-{q:"Acid + base → ?",o:["Oxide + gas","Salt + water","Ester + water","Peroxide + H₂"],a:1,e:"Neutralisation: acid + base → salt + water."},
-{q:"Atomic number of Carbon?",o:["12","6","8","14"],a:1,e:"Atomic number = proton count. Carbon has 6 protons."},
-{q:"Which bond has the highest bond energy?",o:["C−C single","C=C double","C≡C triple","C−H"],a:2,e:"Triple bonds have the highest energy and shortest length."},
-{q:"Which has the highest first ionisation energy in period 2?",o:["Li","Na","Ne","Cs"],a:2,e:"Noble gases have full shells — Ne has the highest IE in period 2."},
-{q:"Chemical formula for sulfuric acid?",o:["HCl","H₂SO₄","HNO₃","H₃PO₄"],a:1,e:"H₂SO₄ — sulfuric acid, a strong diprotic acid."},
-{q:"How many valence electrons does Oxygen have?",o:["4","6","8","2"],a:1,e:"Oxygen is in group 16 — 6 valence electrons."},
-{q:"2H₂ + O₂ → ?",o:["H₂O₂","2H₂O","H₄O₂","2HO"],a:1,e:"Combustion of hydrogen produces water: 2H₂O."},
-{q:"The Bohr model describes discrete...",o:["Nuclear spin states","Electron energy levels","Proton orbitals","Neutron shells"],a:1,e:"Bohr explained hydrogen's discrete atomic emission spectra via energy levels."},
-{q:"What is the half-life of a radioactive isotope?",o:["Time for 25% to decay","Time for 50% to decay","Time for 75% to decay","Full decay time"],a:1,e:"Half-life = time for half the atoms to undergo radioactive decay."},
-{q:"Isotopes of the same element differ in...",o:["Protons","Electrons","Neutrons","Charge"],a:2,e:"Isotopes have the same proton count but different neutron counts."},
-{q:"Ground state electron config of Na (Z=11)?",o:["1s²2s²2p⁶3s¹","1s²2s²2p⁵3s²","1s²2s²2p⁶3p¹","1s²2s²3s²2p⁶"],a:0,e:"Na: [Ne] 3s¹ — one valence electron in the 3s orbital."},
-{q:"Which type of radiation is most penetrating?",o:["Alpha","Beta","Gamma","Neutron"],a:2,e:"Gamma rays are high-energy photons — penetrate concrete and lead."},
-{q:"Hess's Law states that enthalpy change is...",o:["Path-dependent","Temperature-dependent","Path-independent","Pressure-dependent"],a:2,e:"Enthalpy is a state function — total ΔH is independent of path."},
-{q:"A reaction with ΔG < 0 is...",o:["Non-spontaneous","Spontaneous","At equilibrium","Endothermic only"],a:1,e:"Negative Gibbs free energy = spontaneous reaction."},
-{q:"The equilibrium constant K > 1 means...",o:["Reactants favoured","Products favoured","Reaction is fast","ΔG = 0"],a:1,e:"K > 1: products predominate at equilibrium."},
-{q:"What type of catalyst is an enzyme?",o:["Heterogeneous","Homogeneous","Biological","Inorganic"],a:2,e:"Enzymes are biological (protein) catalysts."},
-{q:"A buffer solution resists changes in...",o:["Temperature","Volume","pH","Pressure"],a:2,e:"Buffers contain a weak acid/base pair that absorbs H⁺ or OH⁻."},
-{q:"Henderson-Hasselbalch: pH = pKa + log([A⁻]/[HA]). If [A⁻]=[HA], pH = ?",o:["pKa + 1","pKa − 1","pKa","2×pKa"],a:2,e:"log(1) = 0, so pH = pKa when concentrations are equal."},
-{q:"An empirical formula shows...",o:["Actual atom count","Simplest whole-number ratio","3D structure","Molecular weight"],a:1,e:"Empirical formula: simplest ratio. Molecular formula: actual counts."},
-{q:"In a limiting reagent problem, which is used up first?",o:["Excess reagent","Limiting reagent","Catalyst","Solvent"],a:1,e:"Limiting reagent is fully consumed, stopping the reaction."},
-{q:"Percent yield = ?",o:["theoretical/actual×100","actual/theoretical×100","actual−theoretical","theoretical−actual"],a:1,e:"% yield = (actual yield ÷ theoretical yield) × 100."},
-{q:"Which intermolecular force is strongest?",o:["London dispersion","Dipole-dipole","Hydrogen bonding","Ion-dipole"],a:3,e:"Ion-dipole is strongest. Within molecular compounds, H-bonding is strongest."},
-{q:"Hydrogen bonding requires H bonded to...",o:["Any atom","C, S, or P","F, O, or N","Halogens only"],a:2,e:"H-bonding: H attached to highly electronegative F, O, or N."},
-{q:"A polar molecule has...",o:["Equal electron sharing","Net dipole moment","Only ionic bonds","Symmetric shape"],a:1,e:"Polar molecules have an unequal charge distribution — net dipole ≠ 0."},
-{q:"sp³ hybridisation gives which geometry?",o:["Linear","Trigonal planar","Tetrahedral","Bent"],a:2,e:"sp³: 4 hybrid orbitals, tetrahedral arrangement (e.g., CH₄)."},
-{q:"Which functional group defines an alcohol?",o:["−COOH","−OH","−NH₂","−CHO"],a:1,e:"Alcohols contain the hydroxyl group (−OH) bonded to carbon."},
-{q:"Alkenes are characterised by...",o:["C−C single bond","C=C double bond","C≡C triple bond","C−H bond"],a:1,e:"Alkenes contain at least one C=C double bond."},
-{q:"Benzene's stability arises from...",o:["Alternating single/double bonds","Delocalised π electrons","sp³ carbons","Ionic character"],a:1,e:"Benzene's 6 π electrons are delocalised across the ring — aromatic stability."},
-{q:"Name the compound: NaCl",o:["Sodium chlorate","Sodium chloride","Sodium perchlorate","Sodium hypochlorite"],a:1,e:"NaCl = sodium chloride. The −ide suffix for a single anion."},
-{q:"HNO₃ is called...",o:["Nitrous acid","Hyponitrous acid","Nitric acid","Nitrate acid"],a:2,e:"HNO₃ = nitric acid. Strong acid, used in fertilisers and explosives."},
-{q:"Which equation is balanced? Combustion of methane.",o:["CH₄+O₂→CO₂+H₂O","CH₄+2O₂→CO₂+2H₂O","2CH₄+O₂→CO₂+H₂O","CH₄+O₂→2CO₂+H₂O"],a:1,e:"CH₄ + 2O₂ → CO₂ + 2H₂O. Balanced: 1C, 4H, 4O each side."},
-{q:"In a redox reaction, the reducing agent...",o:["Gains electrons","Loses electrons","Gains protons","Is unchanged"],a:1,e:"Reducing agent donates electrons (is itself oxidised)."},
-{q:"Standard hydrogen electrode (SHE) has E° = ?",o:["−1.0 V","0 V","+1.0 V","+2.0 V"],a:1,e:"SHE is the reference electrode, defined as 0.00 V."},
-{q:"Electrolysis of water produces...",o:["H₂ at cathode, O₂ at anode","O₂ at cathode, H₂ at anode","H₂ at both electrodes","O₂ at both electrodes"],a:0,e:"Reduction at cathode: 2H⁺ + 2e⁻ → H₂. Oxidation at anode: 4OH⁻ → O₂ + 2H₂O + 4e⁻."},
-{q:"Boiling point elevation is a colligative property depending on...",o:["Solute identity","Solvent identity","Number of solute particles","Solute colour"],a:2,e:"Colligative properties depend only on the number of dissolved particles."},
-{q:"Which quantum number defines the orbital shape?",o:["n (principal)","l (azimuthal)","m_l (magnetic)","m_s (spin)"],a:1,e:"l = azimuthal quantum number: 0=s, 1=p, 2=d, 3=f."},
-{q:"What does a catalyst do to activation energy?",o:["Increases it","Decreases it","Doesn't affect it","Doubles it"],a:1,e:"Catalysts lower activation energy, speeding up the reaction without being consumed."},
-{q:"Rate law: rate = k[A]². Doubling [A] multiplies rate by...",o:["2","3","4","8"],a:2,e:"Second-order: rate ∝ [A]². Double [A] → 2² = 4× faster."},
-{q:"SN2 reactions proceed with...",o:["Retention of configuration","Inversion of configuration","Racemisation","No stereochemical change"],a:1,e:"SN2: backside attack causes Walden inversion (complete inversion)."},
-{q:"Which gas law: V ∝ T at constant P?",o:["Boyle's","Charles's","Avogadro's","Gay-Lussac's"],a:1,e:"Charles's Law: volume is proportional to absolute temperature at constant pressure."},
-{q:"Graham's Law: rate of effusion ∝ ?",o:["√M","1/M","M²","1/√M"],a:3,e:"Rate ∝ 1/√M: lighter gases effuse faster (Graham's Law)."},
-{q:"The Aufbau principle states electrons fill orbitals...",o:["From highest energy","From lowest energy","Randomly","By spin first"],a:1,e:"Electrons occupy the lowest available energy orbital first."},
-{q:"Hund's rule: electrons in degenerate orbitals...",o:["Always pair up","Fill one each before pairing","Fill randomly","Share an orbital"],a:1,e:"One electron per orbital before pairing — minimises electron repulsion."},
-{q:"What is the conjugate base of H₂PO₄⁻?",o:["H₃PO₄","HPO₄²⁻","PO₄³⁻","H₂PO₄"],a:1,e:"Conjugate base = remove H⁺: H₂PO₄⁻ → HPO₄²⁻."},
-{q:"Kw (water autoionisation constant) at 25°C = ?",o:["10⁻⁷","10⁻¹⁴","10⁻¹","10⁻¹⁰"],a:1,e:"Kw = [H⁺][OH⁻] = 1×10⁻¹⁴ at 25°C."},
-{q:"Which process converts glucose to ethanol without oxygen?",o:["Aerobic respiration","Fermentation","Hydrolysis","Condensation"],a:1,e:"Fermentation: C₆H₁₂O₆ → 2C₂H₅OH + 2CO₂ (yeast, anaerobic)."},
-{q:"Nylon is an example of which polymer type?",o:["Addition polymer","Condensation polymer","Free-radical polymer","Ionic polymer"],a:1,e:"Nylon is a condensation polymer — forms via loss of small molecules (H₂O or HCl)."},
-{q:"The SI unit of pressure is?",o:["Bar","Atm","Pascal","mmHg"],a:2,e:"Pascal (Pa) = N/m². 1 atm ≈ 101,325 Pa."},
-{q:"Saponification is the reaction of an ester with...",o:["An acid","A strong base","Water only","Another ester"],a:1,e:"Saponification: ester + NaOH → soap (fatty acid salt) + glycerol."},
-];
-let _qSeen=new Set();
-function getUniqueQ(){
-  if(_qSeen.size>=QQ.length-4)_qSeen.clear();
-  let idx;
-  do{idx=Math.floor(Math.random()*QQ.length);}while(_qSeen.has(idx));
-  _qSeen.add(idx);return QQ[idx];
-}
+// QQ array defined in CD data script (loads first)
 
-let quizQ=null,quizCallback=null;
+
 function showQuiz(mode,q,cb){
   quizQ=q;quizCallback=cb;G.quizMode=mode;
   document.getElementById('qov').classList.add('on');
   document.getElementById('q-mode-label').textContent=mode==='earn'?'💰 EARN CHALLENGE':'⚗️ COMBAT BONUS';
   document.getElementById('q-mode-sub').textContent=mode==='earn'?'Correct answer = full reward. Wrong = 50% reward.':'Correct = +30% combat power. Wrong = no bonus.';
-  document.getElementById('qtxt').textContent=q.q;document.getElementById('qfb').textContent='';
+  document.getElementById('qtxt').textContent=q.q;document.getElementById('wq-fb').textContent='';
   document.getElementById('qnxt-earn').style.display='none';
-  const opts=document.getElementById('qopts');opts.innerHTML='';
+  const opts=document.getElementById('wq-opts');opts.innerHTML='';
   q.o.forEach((o,i)=>{
     const b=document.createElement('button');b.className='qo';b.textContent=o;
     b.onclick=()=>{
       document.querySelectorAll('.qo').forEach(x=>x.disabled=true);
       const correct=i===q.a;
-      if(correct){b.classList.add('ok');document.getElementById('qfb').style.color='var(--grnl)';document.getElementById('qfb').textContent='✅ Correct! '+q.e;}
-      else{b.classList.add('no');document.querySelectorAll('.qo')[q.a].classList.add('ok');document.getElementById('qfb').style.color='var(--redl)';document.getElementById('qfb').textContent='❌ Wrong. '+q.e;}
+      if(correct){b.classList.add('ok');document.getElementById('wq-fb').style.color='var(--grnl)';document.getElementById('wq-fb').textContent='✅ Correct! '+q.e;}
+      else{b.classList.add('no');document.querySelectorAll('.qo')[q.a].classList.add('ok');document.getElementById('wq-fb').style.color='var(--redl)';document.getElementById('wq-fb').textContent='❌ Wrong. '+q.e;}
       if(mode==='earn'){
         document.getElementById('qnxt-earn').style.display='block';
         document.getElementById('qnxt-earn').textContent=correct?'Collect Full Reward →':'Collect 50% Reward →';
@@ -2617,10 +2625,10 @@ function setP_W(p){
   if(p==='earn')renderEarn();if(p==='army')renderArmy();
 }
 function updateWorldUI(){
-  ['h-gb','s-gb'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(G.gb);});
-  ['h-army','s-army'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(G.army);});
-  const _hc=document.getElementById('h-con');if(_hc)_hc.textContent=G.conquered;
-  const _sc=document.getElementById('s-con');if(_sc)_sc.textContent=G.conquered;
+  ['wh-gb','ws-gb'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(G.gb);});
+  ['wh-army','ws-army'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(G.army);});
+  const _hc=document.getElementById('wh-con');if(_hc)_hc.textContent=G.conquered;
+  const _sc=document.getElementById('ws-con');if(_sc)_sc.textContent=G.conquered;
   const _sv=document.getElementById('s-v');if(_sv)_sv.textContent=fmt(G.votes);
   document.getElementById('ff').style.width=Math.min(100,Math.round(G.conquered/195*100))+'%';
   document.getElementById('fv').textContent=G.conquered+' / 195';
@@ -2656,7 +2664,7 @@ function updateApproval(){
   const a = getApproval();
   const pct = a.toFixed(1);
   const col = a >= 75 ? '#10b981' : a >= 50 ? '#f59e0b' : a >= 25 ? '#60a5fa' : '#7a8fa3';
-  const hEl = document.getElementById('h-appr'); if(hEl) hEl.textContent = Math.floor(a);
+  const hEl = document.getElementById('wh-appr'); if(hEl) hEl.textContent = Math.floor(a);
   const sEl = document.getElementById('s-appr'); if(sEl){ sEl.textContent = pct+'%'; sEl.style.color = col; }
   const pEl = document.getElementById('appr-pct'); if(pEl){ pEl.textContent = pct+'%'; pEl.style.color = col; }
   const bEl = document.getElementById('appr-bar'); if(bEl) bEl.style.width = a+'%';
@@ -2690,8 +2698,13 @@ setInterval(()=>{
 
 // world init called by goWorld()
 
+
+
+
+
 </script>
 <script>
+
 
 
 
@@ -2770,6 +2783,7 @@ window.doTransition = function() {
   if (S._nextStage === 'world') { goWorld(); return; }
   if (_kdDoTransition) _kdDoTransition();
 };
+
 
 </script>
 
