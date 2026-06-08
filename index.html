@@ -2709,15 +2709,11 @@ setInterval(()=>{
 </script>
 <script>
 
-
-
-
 // ── Mobile bottom nav ────────────────────────────────────────────────────────
 function mbnGo(panel, btnId) {
   setPanel(panel);
   document.querySelectorAll('#kd-mobile-nav .mbn').forEach(function(b){ b.classList.remove('on'); });
   var el = document.getElementById(btnId); if(el) el.classList.add('on');
-  // When switching to non-map panel, collapse map to give more room
   var gmap = document.getElementById('gd-map');
   if(gmap) gmap.style.height = (panel === 'ov' && btnId === 'mbn-map') ? '' : '28vh';
 }
@@ -2730,64 +2726,67 @@ function showMobileNav() {
   var isMobile = window.innerWidth <= 767;
   var kdNav = document.getElementById('kd-mobile-nav');
   var wgNav = document.getElementById('wg-mobile-nav');
-  var inWorld = document.getElementById('world-game').style.display !== 'none' &&
-                document.getElementById('world-game').style.display !== '';
+  var wgEl = document.getElementById('world-game');
+  var inWorld = wgEl && wgEl.style.display !== 'none' && wgEl.style.display !== '';
   if(kdNav) kdNav.style.display = (isMobile && !inWorld) ? 'flex' : 'none';
   if(wgNav) wgNav.style.display = (isMobile && inWorld)  ? 'flex' : 'none';
-  // Set active state
-  if(isMobile && !inWorld) {
-    var mmap = document.getElementById('mbn-map');
-    if(mmap) mmap.classList.add('on');
-  }
-  if(isMobile && inWorld) {
-    var wmap = document.getElementById('wmbn-map');
-    if(wmap) wmap.classList.add('on');
-  }
 }
 window.addEventListener('load', showMobileNav);
 window.addEventListener('resize', showMobileNav);
-// Show world nav after goWorld()
-var _bridgeGoWorld = goWorld;
-goWorld = function() {
-  _bridgeGoWorld();
-  setTimeout(showMobileNav, 200);
-};
 
-// Stage bridge: early game → world conquest
+// ── Stage bridge: early game → world conquest ────────────────────────────────
+// Single goWorld definition. Shows world UI immediately, then loads map libs.
 function goWorld() {
-  G.gb = S.gb;
-  G.army = 100000;
-  G.conquered = 1;
-  document.getElementById('early-game').style.display = 'none';
+  try {
+    G.gb = S.gb;
+    G.army = 100000;
+    G.conquered = 1;
+  } catch(e) {}
+  // Swap containers FIRST so the user always sees the change
+  var eg = document.getElementById('early-game');
+  if (eg) eg.style.display = 'none';
   var wc = document.getElementById('world-game');
-  wc.style.cssText = 'display:flex;flex-direction:column;height:100vh';
-  function loadScr(url, cb) {
-    var s = document.createElement('script');
-    s.src = url; s.onload = cb;
-    document.head.appendChild(s);
-  }
+  if (wc) wc.style.cssText = 'display:flex;flex-direction:column;height:100vh';
+  showMobileNav();
+
   var wlm = document.getElementById('world-loading-msg');
   if (wlm) wlm.textContent = 'Loading world map…';
+
+  // Already loaded? Just build.
+  if (window.d3 && window.topojson) {
+    try { setP_W('ov'); updateWorldUI(); updateApproval(); buildMap(); } catch(e){ if(wlm) wlm.textContent='Map error: '+e.message; }
+    return;
+  }
+
+  function loadScr(url, cb, onerr) {
+    var s = document.createElement('script');
+    s.src = url;
+    s.onload = cb;
+    s.onerror = onerr;
+    document.head.appendChild(s);
+  }
   loadScr('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js', function() {
     loadScr('https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js', function() {
-      setP_W('ov'); updateWorldUI(); updateApproval(); buildMap();
-    });
-  });
+      try { setP_W('ov'); updateWorldUI(); updateApproval(); buildMap(); }
+      catch(e){ if(wlm) wlm.textContent = 'Map error: ' + e.message; }
+    }, function(){ if(wlm) wlm.textContent = 'Could not load map library (topojson). Check your connection.'; });
+  }, function(){ if(wlm) wlm.textContent = 'Could not load map library (D3). Check your connection.'; });
 }
 
 function backToEarlyGame() {
-  document.getElementById('world-game').style.display = 'none';
-  document.getElementById('early-game').style.display = 'flex';
+  var wc = document.getElementById('world-game'); if (wc) wc.style.display = 'none';
+  var eg = document.getElementById('early-game'); if (eg) eg.style.display = 'flex';
+  showMobileNav();
 }
 
-// Patch doTransition AFTER all scripts load — use var to avoid hoisting issues
-// var hoists to undefined; window assignment runs at execution time
-var _kdDoTransition = window.doTransition;
+// Override doTransition so the world stage routes to goWorld()
+var _kdDoTransition = window.doTransition || doTransition;
 window.doTransition = function() {
   if (S._nextStage === 'world') { goWorld(); return; }
   if (_kdDoTransition) _kdDoTransition();
 };
-
+// Also expose globally for the inline onclick
+doTransition = window.doTransition;
 
 </script>
 
