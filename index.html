@@ -2760,48 +2760,57 @@ window.addEventListener('resize', showMobileNav);
 // ── Stage bridge: early game → world conquest ────────────────────────────────
 // Single goWorld definition. Shows world UI immediately, then loads map libs.
 function goWorld() {
-  try {
-    G.gb = S.gb;
-    G.army = 100000;
-    G.conquered = 1;
-  } catch(e) {}
-  // Swap containers and force visibility
+  function diag(msg, color) {
+    var d = document.getElementById('gw-diag');
+    if (!d) {
+      d = document.createElement('div');
+      d.id = 'gw-diag';
+      d.style.cssText = 'position:fixed;top:8px;left:8px;right:8px;z-index:99998;background:#0f2a1a;color:#34d399;padding:8px 10px;border-radius:6px;font-family:monospace;font-size:11px;line-height:1.5;border:1px solid #10b981';
+      document.body.appendChild(d);
+    }
+    d.innerHTML += '<div style="color:' + (color||'#34d399') + '">' + msg + '</div>';
+  }
+  diag('1. goWorld started');
+  try { G.gb = S.gb; G.army = 100000; G.conquered = 1; diag('2. state set: army=' + G.army); }
+  catch(e) { diag('2. STATE ERROR: ' + e.message, '#f87171'); }
+
   var eg = document.getElementById('early-game');
-  if (eg) eg.style.display = 'none';
+  if (eg) { eg.style.display = 'none'; diag('3. early-game hidden'); }
+  else diag('3. early-game NOT FOUND', '#f87171');
+
   var wc = document.getElementById('world-game');
-  if (wc) wc.style.cssText = 'display:flex;flex-direction:column;height:100vh;width:100%';
+  if (wc) { wc.style.cssText = 'display:flex;flex-direction:column;height:100vh;width:100%'; diag('4. world-game shown'); }
+  else diag('4. world-game NOT FOUND', '#f87171');
+
   var appEl = document.getElementById('app');
-  if (appEl) appEl.style.cssText = 'display:flex;flex-direction:column;height:100%;width:100%;flex:1';
-  showMobileNav();
+  if (appEl) { appEl.style.cssText = 'display:flex;flex-direction:column;height:100%;width:100%;flex:1'; diag('5. #app shown'); }
+  else diag('5. #app NOT FOUND', '#f87171');
 
-  // STEP 1: Build the playable UI immediately — no CDN needed.
-  // This populates the header, shop, army, panels so the game is usable
-  // even if the world map library fails to load.
-  try { setP_W('ov'); } catch(e) {}
-  try { updateWorldUI(); } catch(e) {}
-  try { updateApproval(); } catch(e) {}
+  try { showMobileNav(); diag('6. mobile nav ok'); } catch(e) { diag('6. NAV ERROR: ' + e.message, '#f87171'); }
+  try { setP_W('ov'); diag('7. setP_W ok'); } catch(e) { diag('7. setP_W ERROR: ' + e.message, '#f87171'); }
+  try { updateWorldUI(); diag('8. updateWorldUI ok'); } catch(e) { diag('8. updateWorldUI ERROR: ' + e.message, '#f87171'); }
+  try { updateApproval(); diag('9. updateApproval ok'); } catch(e) { diag('9. updateApproval ERROR: ' + e.message, '#f87171'); }
 
-  // STEP 2: Load the map libraries separately. Failure here does NOT
-  // break the rest of the game — only the visual map is affected.
+  diag('10. UI DONE — loading map…', '#60a5fa');
+
   var wlm = document.getElementById('world-loading-msg');
-  if (wlm) wlm.textContent = 'Loading world map…';
-
   if (window.d3 && window.topojson) {
-    try { buildMap(); } catch(e) { if(wlm) wlm.innerHTML = 'Map unavailable — game still playable below.'; }
+    try { buildMap(); diag('11. buildMap called (libs cached)'); } catch(e){ diag('11. buildMap ERROR: '+e.message, '#f87171'); }
     return;
   }
   function loadScr(url, cb, onerr) {
     var s = document.createElement('script');
-    s.src = url; s.async = true;
-    s.onload = cb; s.onerror = onerr;
+    s.src = url; s.async = true; s.onload = cb; s.onerror = onerr;
     document.head.appendChild(s);
   }
   loadScr('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js', function() {
+    diag('11. D3 loaded');
     loadScr('https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js', function() {
-      try { buildMap(); }
-      catch(e) { if(wlm) wlm.innerHTML = 'Map unavailable — game still playable.'; }
-    }, function(){ if(wlm) wlm.innerHTML = 'Map library blocked — game still playable below.'; });
-  }, function(){ if(wlm) wlm.innerHTML = 'Map library blocked — game still playable below.'; });
+      diag('12. topojson loaded');
+      try { buildMap(); diag('13. buildMap called'); }
+      catch(e) { diag('13. buildMap ERROR: ' + e.message, '#f87171'); }
+    }, function(){ diag('12. topojson FAILED to load', '#f87171'); });
+  }, function(){ diag('11. D3 FAILED to load', '#f87171'); });
 }
 
 function backToEarlyGame() {
