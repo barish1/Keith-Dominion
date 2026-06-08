@@ -1398,6 +1398,8 @@ const ISO={4:"Afghanistan",8:"Albania",12:"Algeria",20:"Andorra",24:"Angola",32:
 </script>
 <script>
 
+
+
 const S={
   gb:750,pop:4999,votes:0,sick:0,dead:0,stage:'nyack',
   inv:{},pending:{},
@@ -1777,8 +1779,8 @@ function openProblem(id){
   const pr=PROBS[id];if(!pr)return;
   if(S.probSolved[id]){log(pr.loc+' already solved. +100 GB already collected.','a');return;}
   const modal=document.getElementById('pm');modal.classList.add('on');
-  document.getElementById('pm-loc').textContent='&#x1F4CD; '+pr.loc+' &mdash; Chemistry Emergency';
-  document.getElementById('pm-title').textContent='&#x26A0;&#xFE0F; '+pr.title;
+  document.getElementById('pm-loc').innerHTML='&#x1F4CD; '+pr.loc+' &mdash; Chemistry Emergency';
+  document.getElementById('pm-title').innerHTML='&#x26A0;&#xFE0F; '+pr.title;
   document.getElementById('pm-desc').textContent=pr.desc;
   document.getElementById('pm-q').textContent=pr.q;
   document.getElementById('pm-result').style.display='none';
@@ -1803,7 +1805,7 @@ function answerProblem(id,chosen,btn){
     if(!S.probSolved[id]){
       S.probSolved[id]=true;S.gb+=100;updateUI();log('&#x26A0; '+pr.loc+' problem solved! +100 GB','g');
       const el=document.getElementById('prob-'+id);
-      if(el){const c=el.querySelector('circle');const t=el.querySelector('text');if(c)c.setAttribute('stroke','var(--grn)');if(t){t.textContent='&#x2713;';t.setAttribute('fill','var(--grnl)');}}
+      if(el){const c=el.querySelector('circle');const t=el.querySelector('text');if(c)c.setAttribute('stroke','var(--grn)');if(t){t.innerHTML='&#x2713;';t.setAttribute('fill','var(--grnl)');}}
     }
     setTimeout(()=>closePM(),2000);
   }else{
@@ -1825,32 +1827,32 @@ function runElection(){
   const vo=document.getElementById('vo');
   if(S.stage==='nyack'){
     S._nextStage='rockland';
-    document.getElementById('vo-icon').textContent='&#x1F389;';
-    document.getElementById('vo-title').textContent='KEITH WINS &mdash; MAYOR OF NYACK!';
+    document.getElementById('vo-icon').innerHTML='&#x1F389;';
+    document.getElementById('vo-title').innerHTML='KEITH WINS &mdash; MAYOR OF NYACK!';
     document.getElementById('vo-sub').textContent='Keith Troy Green defeats his opponent '+fmt(S.votes)+' to '+fmt(rival)+'. Nyack is his. Rockland County awaits.';
     document.getElementById('vo-gb').textContent='+7,500 Greenbacks awarded!';
-    document.getElementById('vo-btn').textContent='Zoom out to Rockland County &rarr;';
+    document.getElementById('vo-btn').innerHTML='Zoom out to Rockland County &rarr;';
   }else if(S.stage==='rockland'){
     S._nextStage='nystate';
-    document.getElementById('vo-icon').textContent='&#x1F3DB;&#xFE0F;';
-    document.getElementById('vo-title').textContent='KEITH WINS &mdash; ROCKLAND COUNTY!';
+    document.getElementById('vo-icon').innerHTML='&#x1F3DB;&#xFE0F;';
+    document.getElementById('vo-title').innerHTML='KEITH WINS &mdash; ROCKLAND COUNTY!';
     document.getElementById('vo-sub').textContent='Keith is the most powerful figure in Rockland County. '+fmt(S.votes)+' to '+fmt(rival)+'. New York State is next.';
     document.getElementById('vo-gb').textContent='+50,000 Greenbacks awarded!';
-    document.getElementById('vo-btn').textContent='Zoom out to New York State &rarr;';
+    document.getElementById('vo-btn').innerHTML='Zoom out to New York State &rarr;';
   }else if(S.stage==='nystate'){
     S._nextStage='usa';
-    document.getElementById('vo-icon').textContent='&#x1F5FD;';
+    document.getElementById('vo-icon').innerHTML='&#x1F5FD;';
     document.getElementById('vo-title').textContent='KEITH WINS NEW YORK STATE!';
     document.getElementById('vo-sub').textContent='Governor Keith Green. New York bows. Next up: the entire United States. My man...';
     document.getElementById('vo-gb').textContent='+500,000 Greenbacks awarded!';
-    document.getElementById('vo-btn').textContent='Zoom out to the United States &rarr;';
+    document.getElementById('vo-btn').innerHTML='Zoom out to the United States &rarr;';
   }else if(S.stage==='usa'){
     S._nextStage='world';
-    document.getElementById('vo-icon').textContent='&#x1F1FA;&#x1F1F8;';
+    document.getElementById('vo-icon').innerHTML='&#x1F1FA;&#x1F1F8;';
     document.getElementById('vo-title').textContent='KEITH WINS THE US PRESIDENTIAL ELECTION!';
     document.getElementById('vo-sub').textContent='President Keith Green. '+fmt(S.votes)+' to '+fmt(rival)+'. The US Army is now Keith\u2019s \u2014 100,000 soldiers. The world is next.';
     document.getElementById('vo-gb').textContent='Army unlocked: 100,000 soldiers! Zooming to world stage...';
-    document.getElementById('vo-btn').textContent='&#x1F30E; Begin World Conquest &rarr;';
+    document.getElementById('vo-btn').innerHTML='&#x1F30E; Begin World Conquest &rarr;';
   }
   vo.classList.add('on');
 }
@@ -1863,7 +1865,7 @@ function doTransition(){
       S.ownsNyack=true;
       document.getElementById('map-nyack').style.display='none';
       document.getElementById('map-rockland').style.display='block';
-      document.getElementById('hd-stage').textContent='STAGE 2 &mdash; ROCKLAND COUNTY, NY';
+      document.getElementById('hd-stage').innerHTML='STAGE 2 &mdash; ROCKLAND COUNTY, NY';
       document.getElementById('fp-label').textContent='County Election Progress';
       log('&#x1F5FA;&#xFE0F; Rockland County &mdash; Pop. 104,891. Need 52,446 votes.','i');
       log('&#x26A0;&#xFE0F; Click orange warning markers for chemistry problems (+100 GB each)!','a');
@@ -1874,7 +1876,7 @@ function doTransition(){
       S.ownsCounty=true;
       document.getElementById('map-rockland').style.display='none';
       document.getElementById('map-nystate').style.display='block';
-      document.getElementById('hd-stage').textContent='STAGE 3 &mdash; NEW YORK STATE';
+      document.getElementById('hd-stage').innerHTML='STAGE 3 &mdash; NEW YORK STATE';
       document.getElementById('fp-label').textContent='Gubernatorial Race Progress';
       log('&#x1F5FD; New York State &mdash; Pop. 20,201,249. Need 10,100,625 votes.','i');
       log('&#x1F9A0; Disease tab now available! Use the Shop.','a');
@@ -1884,7 +1886,7 @@ function doTransition(){
       S.ownsNY=true;
       document.getElementById('map-nystate').style.display='none';
       document.getElementById('map-usa').style.display='block';
-      document.getElementById('hd-stage').textContent='STAGE 4 &mdash; UNITED STATES';
+      document.getElementById('hd-stage').innerHTML='STAGE 4 &mdash; UNITED STATES';
       document.getElementById('fp-label').textContent='Presidential Race';
       log('&#x1F1FA;&#x1F1F8; United States &mdash; Pop. 335,890,000. Need 167,945,001 votes to become President!','i');
       log('&#x1F4B0; Use the EARN tab for chemistry patents, pharmaceutical deals, political activities!','a');
@@ -2024,6 +2026,8 @@ function showQRes(){
 }
 function closeQuiz(){var e=qEl('qm');if(e)e.classList.remove('on');}
 function endQuiz(){closeQuiz();}
+
+
 
 </script>
 <script>
