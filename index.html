@@ -533,7 +533,7 @@ window.onerror = function(msg, src, line, col, err) {
 };
 </script>
 
-<div id="early-game">
+<div id="early-game" style="display:none">
 <div id="gd">
 <div id="gd-hdr">
   <div><div class="hd-t">&#x2697;&#xFE0F; KEITH DOMINION</div><div class="hd-stage" id="hd-stage">STAGE 1 &mdash; NYACK, NY</div></div>
@@ -960,6 +960,7 @@ window.onerror = function(msg, src, line, col, err) {
   <button id="vo-btn" onclick="doTransition()">Continue &rarr;</button>
 </div>
 </div>
+</div><!-- /early-game -->
 
 <div id="world-game">
 <div id="app">
@@ -2053,11 +2054,11 @@ const G={gb:600000,army:100000,votes:0,conquered:1,panel:'ov',curCountry:null,cu
   earnCD:{},invState:{quizBonus:false},invTab:'mil',shopTab:'po',
   citySick:{},secLevel:0,hasTreasurer:false,nukePlant:false,ironDome:false,
   earnChallenge:null,quizMode:'combat',
-  invasion:null,invTimer:null,production:{},armsDealUsed:false};
+  invasion:null,invTimer:null,production:{},armsDealUsed:false,recruitUsed:false};
 
-const fmt=n=>Number(n).toLocaleString();
-const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-const rF=(a,b)=>+(rand(a*10,b*10)/10).toFixed(1);
+const WGfmt=n=>Number(n).toLocaleString();
+const WGrand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const rF=(a,b)=>+(WGrand(a*10,b*10)/10).toFixed(1);
 const fmtM=n=>{if(n>=1e9)return(n/1e9).toFixed(2)+'B';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return Math.floor(n/1e3)+'K';return String(n);};
 
 // ── REBALANCED WORLD SHOP ────────────────────────────────────────────────────
@@ -2122,19 +2123,19 @@ function calcWCost(base,isProp=false){let c=base;if(G.secLevel>0)c=Math.floor(c*
 function applyWItem(itemId,cname,cidx){
   const item=findWI(itemId);if(!item)return;
   const cost=calcWCost(itemId==='w_sec'?8000*(G.secLevel+1):item.cost);
-  if(G.gb<cost){logW('Not enough Greenbacks! Need '+fmt(cost)+' GB.','b');return;}
+  if(G.gb<cost){logW('Not enough Greenbacks! Need '+WGfmt(cost)+' GB.','b');return;}
   G.gb-=cost;if(G.hasTreasurer)G.gb+=Math.floor(cost*0.1);
   const c=CD.find(x=>x.n===cname);const city=c.cities[cidx];
   const key=cname+'|'+cidx;let msg='',mt='g';
 
   if(item.lethal&&item.range){
-    const k=Math.min(rand(...item.range),Math.floor(city.p*0.65));
+    const k=Math.min(WGrand(...item.range),Math.floor(city.p*0.65));
     city.p=Math.max(1000,city.p-k);
     const g=+(Math.min(25,k/Math.max(1,city.p)*50)).toFixed(1);
     c.prog[cidx]=Math.min(100,c.prog[cidx]+g);
     msg=item.icon+' '+item.name+': −'+fmtM(k)+' killed. +'+g+'% control.';mt='b';
   }else if(!item.lethal&&item.range){
-    const sk=Math.min(rand(...item.range),Math.floor(city.p*0.35));
+    const sk=Math.min(WGrand(...item.range),Math.floor(city.p*0.35));
     if(!G.citySick[key])G.citySick[key]={count:0,source:item.id};
     G.citySick[key].count=Math.min(city.p,(G.citySick[key].count||0)+sk);
     G.citySick[key].source=item.id;
@@ -2147,7 +2148,7 @@ function applyWItem(itemId,cname,cidx){
     msg='💊 Treated '+fmtM(sk)+'. +'+g+'% control!';
   }else if(item.viral){
     const rnd=Math.random();
-    const g=rnd<0.55?rand(0,4):rnd<0.80?rand(4,10):rnd<0.93?rand(10,18):rand(18,25);
+    const g=rnd<0.55?WGrand(0,4):rnd<0.80?WGrand(4,10):rnd<0.93?WGrand(10,18):WGrand(18,25);
     c.prog[cidx]=Math.min(100,c.prog[cidx]+g);
     msg='📱 Social media'+(g>=18?' 🔥 VIRAL!':'')+' +'+g+'% control.';mt=g>=18?'g':'w';
   }else if(item.gain){
@@ -2176,7 +2177,7 @@ function applyWItem(itemId,cname,cidx){
     G.ironDome=true;msg='🛡️ Iron Dome operational.';
   }else if(item.instant100){
     c.prog[cidx]=100;const gbR=Math.floor(city.p*0.005);G.gb+=gbR;
-    msg='💥 H-BOMB on '+city.n+'! Captured! +'+fmt(gbR)+' GB.';mt='b';
+    msg='💥 H-BOMB on '+city.n+'! Captured! +'+WGfmt(gbR)+' GB.';mt='b';
   }
   logW(msg,mt);
   if(c.prog[cidx]>=100)checkCapture(cname,cidx);
@@ -2195,7 +2196,7 @@ function checkCapture(cname,cidx){
     // Army gain: ~0.5% of conquered pop becomes soldiers, min 100
     const solR=Math.max(1000,Math.floor(c.p/1000));
     G.gb+=gbR;G.army+=solR;
-    logW('🌍 '+cname+' CONQUERED! +'+fmt(gbR)+' GB +'+fmt(solR)+' soldiers ('+c.f+' army absorbed)!','g');
+    logW('🌍 '+cname+' CONQUERED! +'+WGfmt(gbR)+' GB +'+WGfmt(solR)+' soldiers ('+c.f+' army absorbed)!','g');
     refreshColor(cname);updateWorldUI();checkWorldWin();
   }
 }
@@ -2205,14 +2206,12 @@ const W=960,H=500;
 let proj,pathG,svgS,mapG,zoomB,cityLayer,storedFeatures={};
 
 async function buildMap(){
-  try {
-
   const loading=document.getElementById('map-loading');
   svgS=d3.select('#world-svg');svgS.selectAll('*').remove();
   let world;
   try{world=await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');}
-  catch(e){if(loading)loading.innerHTML='<span style="color:#f87171">&#x26A0; Map unavailable — game still playable below.</span>';return;}
-  if(loading)loading.style.display='none';
+  catch(e){loading.innerHTML='<span style="color:#f87171">&#x26A0; Map failed. Check internet.</span>';return;}
+  loading.style.display='none';
   proj=d3.geoNaturalEarth1().scale(153).translate([W/2,H/2+10]);
   pathG=d3.geoPath().projection(proj);
 
@@ -2273,12 +2272,6 @@ async function buildMap(){
 
   cityLayer=mapG.append('g').attr('id','city-layer');
   initEnemyInvasions();
-  } catch(err) {
-    var l = document.getElementById('map-loading');
-    if (l) l.innerHTML = '<span style="color:#f0b429">Map could not render, but the game is fully playable — use the panel below.</span>';
-    // Ensure enemy invasions still initialize even if map drawing failed
-    try { if (typeof initEnemyInvasions === 'function') initEnemyInvasions(); } catch(e) {}
-  }
 }
 
 function doZoom(scale){if(!svgS||!zoomB)return;svgS.transition().duration(300).call(zoomB.scaleBy,scale);}
@@ -2372,7 +2365,7 @@ function refreshCPCities(name){
     el.appendChild(div);
   });
   document.getElementById('cp-full').style.display=(!allDone&&G.army>0)?'block':'none';
-  if(allDone&&!c.conquered){c.conquered=true;G.conquered++;const gbR=Math.floor(c.p/5000);const solR=Math.max(1000,Math.floor(c.p/1000));G.gb+=gbR;G.army+=solR;logW('🌍 '+name+' CONQUERED! +'+fmt(gbR)+' GB +'+fmt(solR)+' soldiers!','g');refreshColor(name);updateUI();checkWin();document.getElementById('cp-status').textContent='✅ CONQUERED!';}
+  if(allDone&&!c.conquered){c.conquered=true;G.conquered++;const gbR=Math.floor(c.p/5000);const solR=Math.max(1000,Math.floor(c.p/1000));G.gb+=gbR;G.army+=solR;log('🌍 '+name+' CONQUERED! +'+fmt(gbR)+' GB +'+fmt(solR)+' soldiers!','g');refreshColor(name);updateUI();checkWin();document.getElementById('cp-status').textContent='✅ CONQUERED!';}
 }
 function closeCP(){G.curCountry=null;if(cityLayer)cityLayer.selectAll('*').remove();document.getElementById('cp').style.display='none';setP(G.panel);}
 function fullInvasion(){
@@ -2380,7 +2373,7 @@ function fullInvasion(){
   let total=0;c.cities.forEach((city,i)=>{if(c.prog[i]<100)total+=Math.floor(city.p*0.08*1.2);});
   if(G.army<total){alert('Need '+fmt(total)+' soldiers. You have '+fmt(G.army)+'.');return;}
   c.cities.forEach((city,i)=>{if(c.prog[i]<100){G.army-=Math.floor(city.p*0.08*0.6);c.prog[i]=100;}});
-  logW('⚔️ Full invasion of '+G.curCountry+'!','g');
+  log('⚔️ Full invasion of '+G.curCountry+'!','g');
   refreshCPCities(G.curCountry);updateUI();
 }
 
@@ -2456,25 +2449,25 @@ function doAttack(){
   const c=CD.find(x=>x.n===G.curCountry);if(!c)return;
   const city=c.cities[G.curCityIdx];
   const defenders=Math.floor(city.p*0.08),mult=G.invState.quizBonus?0.7:1.0,needed=Math.floor(defenders*1.2*mult);
-  if(G.army<Math.floor(needed*0.4)){showIR('Not enough soldiers! Min: '+fmt(Math.floor(needed*0.4))+'.','b');return;}
+  if(G.army<Math.floor(needed*0.4)){showIR('Not enough soldiers! Min: '+WGfmt(Math.floor(needed*0.4))+'.','b');return;}
   const chance=Math.min(0.95,0.55+(G.army/(needed||1))*0.25+(G.invState.quizBonus?0.15:0));
   const win=Math.random()<chance;
-  const lost=win?rand(Math.floor(needed*0.3),Math.floor(needed*0.55)):rand(Math.floor(needed*0.4),Math.min(needed,G.army));
+  const lost=win?WGrand(Math.floor(needed*0.3),Math.floor(needed*0.55)):WGrand(Math.floor(needed*0.4),Math.min(needed,G.army));
   G.army=Math.max(0,G.army-lost);
   if(win){
     c.prog[G.curCityIdx]=100;const gbR=Math.floor(city.p*0.005);G.gb+=gbR;
-    showIR('🏆 '+city.n+' CAPTURED! −'+fmt(lost)+' soldiers. +'+fmt(gbR)+' GB.','g');
-    logW('⚔️ '+city.n+' captured. −'+fmt(lost)+' sol, +'+fmt(gbR)+' GB.','g');
+    showIR('🏆 '+city.n+' CAPTURED! −'+WGfmt(lost)+' soldiers. +'+WGfmt(gbR)+' GB.','g');
+    logW('⚔️ '+city.n+' captured. −'+WGfmt(lost)+' sol, +'+WGfmt(gbR)+' GB.','g');
     G.invState.quizBonus=false;checkCapture(G.curCountry,G.curCityIdx);setTimeout(closeInv,2000);
   }else{
-    showIR('💀 Attack repelled. Lost '+fmt(lost)+' soldiers.','b');
-    logW('⚔️ Failed at '+city.n+'. −'+fmt(lost)+' soldiers.','b');
+    showIR('💀 Attack repelled. Lost '+WGfmt(lost)+' soldiers.','b');
+    logW('⚔️ Failed at '+city.n+'. −'+WGfmt(lost)+' soldiers.','b');
   }
-  document.getElementById('iv-sol').textContent=fmt(G.army);updateWorldUI();
+  document.getElementById('iv-sol').textContent=WGfmt(G.army);updateWorldUI();
 }
 function doProp(){
   const c=CD.find(x=>x.n===G.curCountry);if(!c)return;const city=c.cities[G.curCityIdx];
-  const gain=rand(5,15);c.prog[G.curCityIdx]=Math.min(99,c.prog[G.curCityIdx]+gain);
+  const gain=WGrand(5,15);c.prog[G.curCityIdx]=Math.min(99,c.prog[G.curCityIdx]+gain);
   if(G.gb>=500)G.gb-=500;
   showIR('📢 Propaganda: +'+gain+'% in '+city.n+'.','w');
   logW('📢 Propaganda in '+city.n+' (+'+gain+'%).','w');
@@ -2489,11 +2482,12 @@ function showIR(msg,t){
 }
 
 // ── QUIZ (shared: combat + earn challenges) ──────────────────────────────────
-// QQ array defined in CD data script (loads first)
+// QQ in first script
 
 
+let WG_quizQ=null,WG_quizCallback=null;
 function showQuiz(mode,q,cb){
-  quizQ=q;quizCallback=cb;G.quizMode=mode;
+  WG_quizQ=q;WG_quizCallback=cb;G.quizMode=mode;
   document.getElementById('qov').classList.add('on');
   document.getElementById('q-mode-label').textContent=mode==='earn'?'💰 EARN CHALLENGE':'⚗️ COMBAT BONUS';
   document.getElementById('q-mode-sub').textContent=mode==='earn'?'Correct answer = full reward. Wrong = 50% reward.':'Correct = +30% combat power. Wrong = no bonus.';
@@ -2519,7 +2513,7 @@ function showQuiz(mode,q,cb){
   });
 }
 function startCityQ(){showQuiz('combat',getUniqueQ(),null);}
-function closeQ(){document.getElementById('qov').classList.remove('on');quizQ=null;quizCallback=null;}
+function closeQ(){document.getElementById('qov').classList.remove('on');WG_quizQ=null;WG_quizCallback=null;}
 
 // ── EARN (with chemistry challenges) ──────────────────────────────────────────
 
@@ -2546,7 +2540,7 @@ setInterval(()=>{
   if(gbpt<=0)return;
   G.gb+=gbpt;
   updateWorldUI();
-  const t=document.getElementById('prod-tick');if(t){t.textContent='+'+fmt(gbpt)+' (15s tick)';t.style.opacity='1';setTimeout(()=>{t.style.opacity='0.4';},2000);}
+  const t=document.getElementById('prod-tick');if(t){t.textContent='+'+WGfmt(gbpt)+' (15s tick)';t.style.opacity='1';setTimeout(()=>{t.style.opacity='0.4';},2000);}
 },15000);
 
 
@@ -2571,21 +2565,21 @@ function renderEarn(){
     const stats=lv>0?`<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--dim);margin-bottom:3px"><span>Level ${lv}/${b.maxLv}</span><span style="color:var(--goldl)">${fmt(prodNow)} GB/min</span></div>${lvBar}`:'<div style="font-size:9px;color:var(--muted);margin-bottom:3px">Not built yet</div>';
     let btnTxt,btnDis=false;
     if(maxed){btnTxt='✅ Max Level';btnDis=true;}
-    else if(!canAfford){btnTxt=(lv===0?'Build':'Upgrade Lv.'+(lv+1))+' \u2014 '+fmt(cost)+' GB (insufficient)';btnDis=true;}
-    else{btnTxt=(lv===0?'⚗️ Build \u2014 ':'⚗️ Upgrade Lv.'+(lv+1)+' \u2014 ')+fmt(cost)+' GB + Chemistry Quiz';btnDis=false;}
+    else if(!canAfford){btnTxt=(lv===0?'Build':'Upgrade Lv.'+(lv+1))+' \u2014 '+WGfmt(cost)+' GB (insufficient)';btnDis=true;}
+    else{btnTxt=(lv===0?'⚗️ Build \u2014 ':'⚗️ Upgrade Lv.'+(lv+1)+' \u2014 ')+WGfmt(cost)+' GB + Chemistry Quiz';btnDis=false;}
     card.innerHTML=`<div style="display:flex;gap:9px;margin-bottom:6px"><div style="font-size:20px;flex-shrink:0">${b.icon}</div><div style="flex:1"><div style="font-size:11px;font-weight:700;margin-bottom:1px">${b.name}${lv>0?' <span style="font-size:9px;color:var(--goldl)">Lv.'+lv+'</span>':''}</div><div style="font-size:9px;color:var(--dim);line-height:1.4">${b.desc}</div></div></div>${stats}${!maxed&&lv>0?'<div style="font-size:9px;color:var(--dim);margin-bottom:5px">Next: <span style="color:var(--text)">'+fmt(prodNext)+' GB/min</span> (+'+fmt(b.gbPM)+')</div>':''}<button style="width:100%;padding:7px;border:1px solid ${btnDis?'var(--brd)':'var(--goldl)'};border-radius:6px;background:transparent;color:${btnDis?'var(--dim)':'var(--goldl)'};font-family:Courier New,monospace;font-size:9px;cursor:${btnDis?'not-allowed':'pointer'};font-weight:700;" ${btnDis?'disabled':''} onclick="buildOrUpgrade('${b.id}')">${btnTxt}</button>`;
     el.appendChild(card);
   });
   const aSect=document.createElement('div');
   aSect.style.cssText='margin-top:4px;padding-top:8px;border-top:1px solid var(--brd)';
   aSect.innerHTML='<div style="font-size:9px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;padding:4px 0 8px;font-weight:700">Military (no quiz)</div>';
-  [{id:'recruit',icon:'🪖',name:'Recruitment Drive',soldiers:[5000,15000],cd:45},{id:'arms',icon:'⚔️',name:'Arms Deal',gb:[300000,800000],cd:90}].forEach(item=>{
-    const now=Date.now(),cd=G.earnCD[item.id]||0,ready=now>=cd,rem=ready?0:Math.ceil((cd-now)/1000);
+  [{id:'recruit',icon:'🪖',name:'Recruitment Drive',soldiers:[5000,15000]},{id:'arms',icon:'⚔️',name:'Arms Deal',gb:[300000,800000]}].forEach(item=>{
+    const used=(item.id==='arms'&&G.armsDealUsed)||(item.id==='recruit'&&G.recruitUsed);
     const d=document.createElement('div');d.className='ec';
     let bgs='';
     if(item.soldiers)bgs+=`<span class="bg bgb">+${fmt(item.soldiers[0])}\u2013${fmt(item.soldiers[1])} sol.</span>`;
     if(item.gb)bgs+=`<span class="bg bgy">+${fmt(item.gb[0])}\u2013${fmt(item.gb[1])} GB</span>`;
-    d.innerHTML=`<div class="ec-r"><div class="ec-i">${item.icon}</div><div><div class="ec-n">${item.name}</div></div></div><div class="bgs">${bgs}</div><button class="ebtn" ${!ready?'disabled':''} onclick="doArmyAction('${item.id}')">${!ready?'\u23F3 '+rem+'s':'Activate'}</button>`;
+    d.innerHTML=`<div class="ec-r"><div class="ec-i">${item.icon}</div><div><div class="ec-n">${item.name} <span style="font-size:8px;color:var(--dim)">(one-time)</span></div></div></div><div class="bgs">${bgs}</div><button class="ebtn" ${used?'disabled':''} onclick="doArmyAction('${item.id}')">${used?'\u2713 Used':'Activate'}</button>`;
     aSect.appendChild(d);
   });
   el.appendChild(aSect);
@@ -2595,7 +2589,7 @@ function buildOrUpgrade(id){
   const b=PROD.find(x=>x.id===id);if(!b)return;
   const lv=getPLv(id);if(lv>=b.maxLv)return;
   const cost=lv===0?b.unlockCost:getUpCost(id);
-  if(G.gb<cost){logW('Not enough GB! Need '+fmt(cost)+' GB.','b');return;}
+  if(G.gb<cost){logW('Not enough GB! Need '+WGfmt(cost)+' GB.','b');return;}
   const q=getUniqueQ();
   showQuiz('earn',q,(correct)=>{
     if(!correct){logW('\u274C Wrong answer \u2014 '+b.name+' upgrade cancelled.','b');renderEarn();return;}
@@ -2603,23 +2597,22 @@ function buildOrUpgrade(id){
     if(G.hasTreasurer)G.gb+=Math.floor(cost*0.1);
     G.production[id]=(G.production[id]||0)+1;
     const newLv=G.production[id];
-    logW((newLv===1?'\uD83D\uDD28 Built ':'\u2B06\uFE0F Upgraded ')+b.name+' to Level '+newLv+'. Now: '+fmt(b.gbPM*newLv)+' GB/min!','g');
+    logW((newLv===1?'\uD83D\uDD28 Built ':'\u2B06\uFE0F Upgraded ')+b.name+' to Level '+newLv+'. Now: '+WGfmt(b.gbPM*newLv)+' GB/min!','g');
     updateWorldUI();renderEarn();
   });
 }
 
 function doArmyAction(id){
-  if(id==='arms'&&G.armsDealUsed){logW('Arms Deal already used — one-time only.','b');return;}
-  const AACT=[{id:'recruit',soldiers:[5000,15000],cd:45},{id:'arms',gb:[300000,800000],cd:90}];
+  if(id==='arms'&&G.armsDealUsed){logW('Arms Deal already used \u2014 one-time only.','b');return;}
+  if(id==='recruit'&&G.recruitUsed){logW('Recruitment Drive already used \u2014 one-time only.','b');return;}
+  const AACT=[{id:'recruit',soldiers:[5000,15000]},{id:'arms',gb:[300000,800000]}];
   const item=AACT.find(i=>i.id===id);if(!item)return;
   let msg='';
-  if(item.soldiers){const s=rand(item.soldiers[0],item.soldiers[1]);G.army+=s;msg+='+'+fmt(s)+' soldiers. ';}
-  if(item.gb){const g=rand(item.gb[0],item.gb[1]);G.gb+=g;msg+='+'+fmt(g)+' GB. ';}
-  const cdm=getBonus('earnFaster')?0.9:1;
+  if(item.soldiers){const s=WGrand(item.soldiers[0],item.soldiers[1]);G.army+=s;msg+='+'+WGfmt(s)+' soldiers. ';}
+  if(item.gb){const g=WGrand(item.gb[0],item.gb[1]);G.gb+=g;msg+='+'+WGfmt(g)+' GB. ';}
   if(id==='arms')G.armsDealUsed=true;
-  if(id==='arms')G.armsDealUsed=true;
-  G.earnCD[id]=Date.now()+item.cd*1000*cdm;
-  logW('🪖 '+id+': '+msg,'g');updateWorldUI();
+  if(id==='recruit')G.recruitUsed=true;
+  logW('\uD83E\uDE96 '+item.id+': '+msg+'(one-time only)','g');updateWorldUI();
   setTimeout(()=>{if(G.panel==='earn')renderEarn();},1100);
 }
 
@@ -2633,15 +2626,15 @@ function renderArmy(){
   const cu=document.createElement('div');cu.className='ec';
   cu.innerHTML=`<div class="ec-r"><div class="ec-i">🪖</div><div><div class="ec-n">Custom Recruitment</div><div class="ec-d">10 GB per soldier.</div></div></div><div style="display:flex;gap:7px;align-items:center;margin-bottom:7px"><input id="ac" type="number" min="1" value="1000" style="flex:1;background:var(--bg);color:var(--text);border:1px solid var(--brd);border-radius:6px;padding:7px;font-family:Courier New,monospace;font-size:11px;outline:none"><div style="font-size:10px;color:var(--dim)">×10 GB</div></div><div style="font-size:10px;color:var(--dim);margin-bottom:6px">Cost: <span id="ac-cost">10,000 GB</span></div><button class="ebtn" onclick="recruitC()">Recruit</button>`;
   el.appendChild(cu);
-  document.getElementById('ac')?.addEventListener('input',function(){document.getElementById('ac-cost').textContent=fmt((parseInt(this.value)||0)*10)+' GB';});
+  document.getElementById('ac')?.addEventListener('input',function(){document.getElementById('ac-cost').textContent=WGfmt((parseInt(this.value)||0)*10)+' GB';});
   [{cost:5000,sol:1000},{cost:50000,sol:15000},{cost:200000,sol:80000}].forEach(pkg=>{
     const d=document.createElement('div');d.className='ec';
     d.innerHTML=`<div class="ec-r"><div class="ec-i">⭐</div><div><div class="ec-n">${fmt(pkg.sol)}-Soldier Package</div></div></div><div class="bgs"><span class="bg bgy">${fmt(pkg.cost)} GB</span><span class="bg bgb">+${fmt(pkg.sol)} sol.</span></div><button class="ebtn" onclick="recruitP(${pkg.cost},${pkg.sol})" ${G.gb<pkg.cost?'disabled':''}>Recruit</button>`;
     el.appendChild(d);
   });
 }
-function recruitC(){const n=parseInt(document.getElementById('ac')?.value)||0;if(!n)return;const c=n*10;if(G.gb<c){logW('Need '+fmt(c)+' GB','b');return;}G.gb-=c;G.army+=n;logW('💪 Recruited '+fmt(n)+' for '+fmt(c)+' GB','g');updateWorldUI();renderArmy();}
-function recruitP(cost,sol){if(G.gb<cost){logW('Not enough GB!','b');return;}G.gb-=cost;G.army+=sol;logW('💪 Recruited '+fmt(sol)+' for '+fmt(cost)+' GB!','g');updateWorldUI();renderArmy();}
+function recruitC(){const n=parseInt(document.getElementById('ac')?.value)||0;if(!n)return;const c=n*10;if(G.gb<c){logW('Need '+WGfmt(c)+' GB','b');return;}G.gb-=c;G.army+=n;logW('💪 Recruited '+WGfmt(n)+' for '+WGfmt(c)+' GB','g');updateWorldUI();renderArmy();}
+function recruitP(cost,sol){if(G.gb<cost){logW('Not enough GB!','b');return;}G.gb-=cost;G.army+=sol;logW('💪 Recruited '+WGfmt(sol)+' for '+WGfmt(cost)+' GB!','g');updateWorldUI();renderArmy();}
 
 // ── PANELS + UI ─────────────────────────────────────────────────────────────────
 function setP_W(p){
@@ -2651,13 +2644,12 @@ function setP_W(p){
   if(p==='earn')renderEarn();if(p==='army')renderArmy();
 }
 function updateWorldUI(){
-  ['wh-gb','ws-gb'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(G.gb);});
-  ['wh-army','ws-army'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=fmt(G.army);});
+  ['wh-gb','ws-gb'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=WGfmt(G.gb);});
+  ['wh-army','ws-army'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=WGfmt(G.army);});
   const _hc=document.getElementById('wh-con');if(_hc)_hc.textContent=G.conquered;
   const _sc=document.getElementById('ws-con');if(_sc)_sc.textContent=G.conquered;
-  const _sv=document.getElementById('s-v');if(_sv)_sv.textContent=fmt(G.votes);
-  document.getElementById('ff').style.width=Math.min(100,Math.round(G.conquered/195*100))+'%';
-  document.getElementById('fv').textContent=G.conquered+' / 195';
+  const _ff=document.getElementById('ff');if(_ff)_ff.style.width=Math.min(100,Math.round(G.conquered/195*100))+'%';
+  const _fv=document.getElementById('fv');if(_fv)_fv.textContent=G.conquered+' / 195';
   updateApproval();
 }
 function checkWorldWin(){if(G.conquered>=195)document.getElementById('vic').classList.add('on');}
@@ -2722,7 +2714,7 @@ setInterval(()=>{
   checkCapture(c.n, idx); updateWorldUI();
 }, 5*60*1000);
 
-// world init called by goWorld()
+// init via goWorld()
 
 
 
@@ -2759,43 +2751,27 @@ window.addEventListener('resize', showMobileNav);
 
 // ── Stage bridge: early game → world conquest ────────────────────────────────
 // Single goWorld definition. Shows world UI immediately, then loads map libs.
-function goWorld() {
-  function diag(msg, color) {
-    var d = document.getElementById('gw-diag');
-    if (!d) {
-      d = document.createElement('div');
-      d.id = 'gw-diag';
-      d.style.cssText = 'position:fixed;top:8px;left:8px;right:8px;z-index:99998;background:#0f2a1a;color:#34d399;padding:8px 10px;border-radius:6px;font-family:monospace;font-size:11px;line-height:1.5;border:1px solid #10b981';
-      document.body.appendChild(d);
-    }
-    d.innerHTML += '<div style="color:' + (color||'#34d399') + '">' + msg + '</div>';
-  }
-  diag('1. goWorld started');
-  try { G.gb = S.gb; G.army = 100000; G.conquered = 1; diag('2. state set: army=' + G.army); }
-  catch(e) { diag('2. STATE ERROR: ' + e.message, '#f87171'); }
-
+// Shared: reveal & lay out the world stage, build UI, load map. No state carry-over.
+function _showWorldStage() {
   var eg = document.getElementById('early-game');
-  if (eg) { eg.style.display = 'none'; diag('3. early-game hidden'); }
-  else diag('3. early-game NOT FOUND', '#f87171');
-
+  if (eg) eg.style.display = 'none';
   var wc = document.getElementById('world-game');
-  if (wc) { wc.style.cssText = 'display:flex;flex-direction:column;height:100vh;width:100%'; diag('4. world-game shown'); }
-  else diag('4. world-game NOT FOUND', '#f87171');
-
+  if (wc) wc.style.cssText = 'display:flex;flex-direction:column;position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;z-index:1;background:var(--bg,#0d1117)';
   var appEl = document.getElementById('app');
-  if (appEl) { appEl.style.cssText = 'display:flex;flex-direction:column;height:100%;width:100%;flex:1'; diag('5. #app shown'); }
-  else diag('5. #app NOT FOUND', '#f87171');
-
-  try { showMobileNav(); diag('6. mobile nav ok'); } catch(e) { diag('6. NAV ERROR: ' + e.message, '#f87171'); }
-  try { setP_W('ov'); diag('7. setP_W ok'); } catch(e) { diag('7. setP_W ERROR: ' + e.message, '#f87171'); }
-  try { updateWorldUI(); diag('8. updateWorldUI ok'); } catch(e) { diag('8. updateWorldUI ERROR: ' + e.message, '#f87171'); }
-  try { updateApproval(); diag('9. updateApproval ok'); } catch(e) { diag('9. updateApproval ERROR: ' + e.message, '#f87171'); }
-
-  diag('10. UI DONE — loading map…', '#60a5fa');
-
+  if (appEl) appEl.style.cssText = 'display:flex;flex-direction:column;flex:1 1 auto;width:100%;height:100%;min-height:0';
+  var hdrEl = document.getElementById('hdr');
+  if (hdrEl) hdrEl.style.flex = '0 0 auto';
+  var bodyEl = document.getElementById('body');
+  if (bodyEl) bodyEl.style.cssText += ';flex:1 1 auto;min-height:0';
+  var footEl = document.getElementById('foot');
+  if (footEl) footEl.style.flex = '0 0 auto';
+  try { showMobileNav(); } catch(e) {}
+  try { setP_W('ov'); } catch(e) {}
+  try { updateWorldUI(); } catch(e) {}
+  try { updateApproval(); } catch(e) {}
   var wlm = document.getElementById('world-loading-msg');
   if (window.d3 && window.topojson) {
-    try { buildMap(); diag('11. buildMap called (libs cached)'); } catch(e){ diag('11. buildMap ERROR: '+e.message, '#f87171'); }
+    try { buildMap(); } catch(e) { if(wlm) wlm.innerHTML='Map unavailable — game still playable.'; }
     return;
   }
   function loadScr(url, cb, onerr) {
@@ -2804,13 +2780,27 @@ function goWorld() {
     document.head.appendChild(s);
   }
   loadScr('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js', function() {
-    diag('11. D3 loaded');
     loadScr('https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js', function() {
-      diag('12. topojson loaded');
-      try { buildMap(); diag('13. buildMap called'); }
-      catch(e) { diag('13. buildMap ERROR: ' + e.message, '#f87171'); }
-    }, function(){ diag('12. topojson FAILED to load', '#f87171'); });
-  }, function(){ diag('11. D3 FAILED to load', '#f87171'); });
+      try { buildMap(); } catch(e) { if(wlm) wlm.innerHTML='Map unavailable — game still playable.'; }
+    }, function(){ if(wlm) wlm.innerHTML='Map library blocked — game still playable below.'; });
+  }, function(){ if(wlm) wlm.innerHTML='Map library blocked — game still playable below.'; });
+}
+
+// Transition FROM the (now-unused) early game, carrying its progress.
+function goWorld() {
+  try { G.gb = S.gb; G.army = 100000; G.conquered = 1; } catch(e) {}
+  _showWorldStage();
+}
+
+// Start DIRECTLY at world conquest with the world's own starting values.
+function initWorldDirect() {
+  _showWorldStage();
+}
+// Launch straight into world conquest on page load.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initWorldDirect);
+} else {
+  initWorldDirect();
 }
 
 function backToEarlyGame() {
